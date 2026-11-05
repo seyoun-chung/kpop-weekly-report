@@ -1,5 +1,5 @@
 // 자동 생성: python scripts/build_dashboard_data.py (직접 고치지 말 것)
-// 주차 2026-11-01 · 생성 2026-11-05 18:59
+// 주차 2026-11-01 · 생성 2026-11-05 19:24
 const CH_REAL=[
  {
   "t": "한터 주간 앨범",
@@ -1657,9 +1657,9 @@ const D_REAL=[
   "sr": 444072,
   "pr": 411654,
   "sst": null,
-  "cum": null,
+  "cum": 46.4,
   "rk": [
-   null,
+   2,
    null,
    null,
    null
@@ -1682,16 +1682,16 @@ const D_REAL=[
   "src": {
    "초동": "https://www.hanteochart.com/ko/albums/900565126",
    "전작": "https://www.hanteochart.com/ko/albums/900558340",
-   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
+   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
+   "써클 식": "BREAK EVEN 2026년 411,646 + BREAK EVEN (Weverse) 2026년 52,591 = 464,237 (써클 주간 Total_CNT 버전별·연도별 마지막 값, 2026년 44주차까지; Top100 밖 주간 판매분 미포함)",
+   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/illit/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-09/",
    "UK": "https://www.officialcharts.com/charts/albums-chart/20261030/7502/",
    "Hot 100": "https://www.billboard.com/artist/illit/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20261027062945/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20261101150008/https://kworb.net/charts/aitunes/cl.html"
   },
-  "note": "미니 5집(2026-10-26 발매). 한터 초동 7일(10/26~11/01) 집계 완료값. 써클 주간차트는 2026-10-18~24주까지만 공개(10/25~31주 미공개) → 누적·주차순위 집계 전. 빌보드200은 확인 시점 공개 차트 기준 미진입(첫 풀트래킹 주 차트는 미공개라 이후 진입 가능). UK는 2026-10-30 차트만 공개(이후 주 미공개). 전작 MAMIHLAPINATAPAI(미니 4집, 직전 발매). 오리콘: 2026-11-09자(10/26~11/1 집계) 4위(첫 주차만 공개, 이후 주 미공개라 잠정 최고); 오리콘 주간 앨범 랭킹(HYBE JAPAN 유통, 輸入盤 표기 없음).",
+  "note": "미니 5집(2026-10-26 발매). 한터 초동 7일(10/26~11/01) 집계 완료값. 써클은 발매주 2026W44(10/25~31)부터 반영(2026-11-05 공개 확인). 빌보드200은 확인 시점 공개 차트 기준 미진입(첫 풀트래킹 주 차트는 미공개라 이후 진입 가능). UK는 2026-10-30 차트만 공개(이후 주 미공개). 전작 MAMIHLAPINATAPAI(미니 4집, 직전 발매). 오리콘: 2026-11-09자(10/26~11/1 집계) 4위(첫 주차만 공개, 이후 주 미공개라 잠정 최고); 오리콘 주간 앨범 랭킹(HYBE JAPAN 유통, 輸入盤 표기 없음).",
   "live": null,
   "ins": [
    {
@@ -1881,7 +1881,7 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900562280",
    "전작": "https://www.hanteochart.com/ko/albums/900551193",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "THIS & THAT 2026년 3,287,666 + THIS & THAT (FANS) 2026년 527,910 + THIS & THAT (LP) 2026년 51,643 = 3,867,219 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 식": "THIS & THAT 2026년 3,287,666 + THIS & THAT (FANS) 2026년 527,910 + THIS & THAT (LP) 2026년 51,643 = 3,867,219 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2026-08-02주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=32&yearTime=3 ; 2026-08-09주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=33&yearTime=3 ; 2026-08-16주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=34&yearTime=3 ; 2026-08-23주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=35&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/stray-kids/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-08-24/",
@@ -1947,7 +1947,7 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900550091",
    "전작": "https://www.hanteochart.com/ko/albums/900544342",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=38&yearTime=3",
-   "써클 식": "TEN: The Story Goes On 2025년 333,012 + TEN: The Story Goes On 2026년 26,109 + TEN: The Story Goes On (Nemo) 2025년 50,000 = 409,121 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 식": "TEN: The Story Goes On 2025년 333,012 + TEN: The Story Goes On 2026년 26,109 + TEN: The Story Goes On (Nemo) 2025년 50,000 = 409,121 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2025-10-05주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2025&targetTime=41&yearTime=3 ; 2025-10-12주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2025&targetTime=42&yearTime=3 ; 2025-10-19주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2025&targetTime=43&yearTime=3 ; 2025-10-26주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2025&targetTime=44&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/twice/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2025-10-27/",
@@ -2013,7 +2013,7 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900559375",
    "전작": "https://www.hanteochart.com/ko/albums/900551125",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=30&yearTime=3",
-   "써클 식": "Motto 2026년 265,116 + Motto (POCA) 2026년 102,568 + Motto (TAPE) 2026년 6,237 = 373,921 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 식": "Motto 2026년 265,116 + Motto (POCA) 2026년 102,568 + Motto (TAPE) 2026년 6,237 = 373,921 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2026-05-17주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=21&yearTime=3 ; 2026-05-24주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=22&yearTime=3 ; 2026-05-31주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=23&yearTime=3 ; 2026-06-07주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=24&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/itzy/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-06-01/",
@@ -2079,7 +2079,7 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900564974",
    "전작": "https://www.hanteochart.com/ko/albums/900558984",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "Strange Muse 2026년 318,438 + Strange Muse (POCA) 2026년 33,839 + Strange Muse (LP) 2026년 26,971 + Strange Muse (FANS) 2026년 16,149 = 395,397 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 식": "Strange Muse 2026년 318,438 + Strange Muse (POCA) 2026년 33,839 + Strange Muse (LP) 2026년 26,971 + Strange Muse (FANS) 2026년 16,149 = 395,397 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2026-10-18주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3 ; 2026-10-25주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3 ; 2026-11-01주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3 ; 2026-11-08주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=46&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/nmixx/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-02/ ; https://www.oricon.co.jp/rank/ja/w/2026-11-09/",
@@ -2087,7 +2087,7 @@ const D_REAL=[
    "Hot 100": "https://www.billboard.com/artist/nmixx/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20261022022000/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20261023110651/https://kworb.net/charts/aitunes/br.html"
   },
-  "note": "미니 6집(10-19 18시 발매). 써클 2주차(2026-10-25~31주) 이후 미발표→집계 전, 누적은 1주차(2026-10-18~24주)까지. BB200 아티스트 차트 이력·UK(10-23·10-30자)에서 확인 시점(2026-11-04) 기준 미진입; 오리콘: 2026-11-02자(10-19~25 집계)·11-09자(10-26~11-01 집계) 1~50위에 Strange Muse 없음; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
+  "note": "미니 6집(10-19 18시 발매). 써클 누적·주차 순위는 캐시의 마지막 공개 주까지(2026W44 공개 확인 2026-11-05). BB200 아티스트 차트 이력·UK(10-23·10-30자)에서 확인 시점(2026-11-04) 기준 미진입; 오리콘: 2026-11-02자(10-19~25 집계)·11-09자(10-26~11-01 집계) 1~50위에 Strange Muse 없음; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
   "live": null,
   "ins": [
    {
@@ -2119,10 +2119,10 @@ const D_REAL=[
   "sr": 714887,
   "pr": 667234,
   "sst": null,
-  "cum": 20.0,
+  "cum": 78.9,
   "rk": [
    4,
-   null,
+   1,
    null,
    null
   ],
@@ -2144,8 +2144,8 @@ const D_REAL=[
   "src": {
    "초동": "https://www.hanteochart.com/ko/albums/900565130",
    "전작": "https://www.hanteochart.com/ko/albums/900555840",
-   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "Looks Can Kill (Nemo) 2026년 200,000 = 200,000 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
+   "써클 식": "Looks Can Kill (Nemo) 2026년 200,000 + Looks Can Kill 2026년 588,958 = 788,958 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2026-10-18주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3 ; 2026-10-25주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3 ; 2026-11-01주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3 ; 2026-11-08주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=46&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/ive/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-09/",
@@ -2153,7 +2153,7 @@ const D_REAL=[
    "Hot 100": "https://www.billboard.com/artist/ive/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20261027062945/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20261101150008/https://kworb.net/charts/aitunes/cl.html"
   },
-  "note": "미니 5집(공식 발매 2026-10-26 18시; 한터 판매개시일 표기 2026-10-23, 한터 초동 7일 그래프 완료). 써클: 2026-10-18~24주에 플랫폼반(Nemo) 엔트리만 4위로 선진입→wk1으로 기재, 일반반은 10-25~31주부터 반영 예정(미발표). 누적도 Nemo 200,000뿐(일반반 미반영). BB200: 확인 시점(2026-11-04) billboard.com 아티스트 차트 이력에 Billboard 200 항목 자체가 없음. 전작 REVIVE+(정규 2집); 오리콘: 일본 유통반(소니뮤직재팬인터내셔널, 오리콘 표기 발매일 2026-11-03, 輸入盤 표기 아님) 2026-11-09자(10-26~11-01 집계) 6위·추정 14,133장; 1주차만 발표된 상태; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
+  "note": "미니 5집(공식 발매 2026-10-26 18시; 한터 판매개시일 표기 2026-10-23, 한터 초동 7일 그래프 완료). 써클: 2026-10-18~24주에 플랫폼반(Nemo) 엔트리만 4위로 선진입→wk1으로 기재, 일반반은 10-25~31주(2026W44) 1위로 반영(2026-11-05 공개 확인). 누적 = Nemo + 일반반. BB200: 확인 시점(2026-11-04) billboard.com 아티스트 차트 이력에 Billboard 200 항목 자체가 없음. 전작 REVIVE+(정규 2집); 오리콘: 일본 유통반(소니뮤직재팬인터내셔널, 오리콘 표기 발매일 2026-11-03, 輸入盤 표기 아님) 2026-11-09자(10-26~11-01 집계) 6위·추정 14,133장; 1주차만 발표된 상태; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
   "live": null,
   "ins": [
    {
@@ -2211,7 +2211,7 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900564641",
    "전작": "https://www.hanteochart.com/ko/albums/900558751",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "sonorous 2026년 305,236 = 305,236 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 2026-10-18~24주까지; Top100 밖 주 판매분 미포함)",
+   "써클 식": "sonorous 2026년 305,236 = 305,236 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
    "주간 순위": "2026-09-27주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=40&yearTime=3 ; 2026-10-04주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=41&yearTime=3 ; 2026-10-11주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=42&yearTime=3 ; 2026-10-18주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/cravity/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-10-12/ ; https://www.oricon.co.jp/rank/ja/w/2026-10-19/",
@@ -2251,9 +2251,9 @@ const D_REAL=[
   "sr": 803415,
   "pr": 731673,
   "sst": null,
-  "cum": null,
+  "cum": 68.3,
   "rk": [
-   null,
+   3,
    null,
    null,
    null
@@ -2277,15 +2277,15 @@ const D_REAL=[
    "초동": "https://www.hanteochart.com/ko/albums/900565431",
    "전작": "https://www.hanteochart.com/ko/albums/900559538",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
-   "써클 식": "발매주(2026-10-25~31) 써클 주간차트 미발표",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
+   "써클 식": "Sequence 02: Attraction 2026년 391,489 + Sequence 02: Attraction (POCA) 2026년 264,618 + Sequence 02: Attraction (WITHVUU) 2026년 26,623 = 682,730 (써클 주간 Total_CNT, 버전별·연도별 마지막 Top100 진입 주 기준, 써클 2026년 44주차까지; Top100 밖 주 판매분 미포함)",
+   "주간 순위": "2026-10-25주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3 ; 2026-11-01주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3 ; 2026-11-08주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=46&yearTime=3 ; 2026-11-15주 https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=47&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/and2ble/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-09/",
    "UK": "https://www.officialcharts.com/charts/albums-chart/20261030/7502/",
    "Hot 100": "https://www.billboard.com/charts/hot-100/",
    "남미 iTunes": "https://web.archive.org/web/20261027062945/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20261101150008/https://kworb.net/charts/aitunes/cl.html"
   },
-  "note": "미니 2집(2026-10-27 18시 발매, https://www.soompi.com/article/1875552wpp/and2ble-announces-comeback-with-2nd-mini-album-sequence-02-attraction). 소속 YH엔터테인먼트(한터 기획사 표기 'YH ENTERTAINMENT(와이에이치)'). 데뷔작 Sequence 01이 전작. 써클: 발매주(2026-10-25~31) 차트 미발표→집계 전. BB200: billboard.com 아티스트 페이지 없음(404)=차트 이력 없음(확인 시점 기준). UK 10-30자 미진입; 오리콘: 일본 유통반(소니뮤직재팬인터내셔널, 오리콘 표기 발매일 2026-11-06 선출하) 2026-11-09자 7위·추정 11,200장; 1주차만 발표된 상태; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
+  "note": "미니 2집(2026-10-27 18시 발매, https://www.soompi.com/article/1875552wpp/and2ble-announces-comeback-with-2nd-mini-album-sequence-02-attraction). 소속 YH엔터테인먼트(한터 기획사 표기 'YH ENTERTAINMENT(와이에이치)'). 데뷔작 Sequence 01이 전작. 써클: 발매주 2026W44(10-25~31)부터 반영(일반·POCA·WITHVUU 합산, 2026-11-05 공개 확인). BB200: billboard.com 아티스트 페이지 없음(404)=차트 이력 없음(확인 시점 기준). UK 10-30자 미진입; 오리콘: 일본 유통반(소니뮤직재팬인터내셔널, 오리콘 표기 발매일 2026-11-06 선출하) 2026-11-09자 7위·추정 11,200장; 1주차만 발표된 상태; 한터 초동=앨범 페이지 초동 그래프 sumValue(발매 후 7일, 전 버전 합산)",
   "live": null,
   "ins": [
    {
@@ -2357,9 +2357,9 @@ const D_REAL=[
    {
     "rule": "싱글",
     "p": 1,
-    "obs": "선공개 「Drip」 Global 200 190위 · YouTube 한국 12위",
-    "sug": "「GOLDEN HOUR : Part.6」 홍보에 「Drip」 반응(Global 200 190위)을 앞세우기",
-    "txt": "「Drip」 Global 200 190위 → Part.6 홍보에 활용"
+    "obs": "선공개 「Drip」 Global 200 191위 · YouTube 한국 12위",
+    "sug": "「GOLDEN HOUR : Part.6」 홍보에 「Drip」 반응(Global 200 191위)을 앞세우기",
+    "txt": "「Drip」 Global 200 191위 → Part.6 홍보에 활용"
    },
    {
     "rule": "빌보드 200",
@@ -2461,7 +2461,7 @@ const D_REAL=[
    null
   ],
   "c": [
-   null,
+   "집계 전",
    "집계 전",
    "집계 전",
    "집계 전",
@@ -2478,16 +2478,16 @@ const D_REAL=[
   "src": {
    "초동": "https://www.hanteochart.com/ko/albums/900565663",
    "전작": "https://www.hanteochart.com/ko/albums/900552013",
-   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
+   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "써클 식": "",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
+   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/rescene/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/",
    "UK": "https://www.officialcharts.com/charts/albums-chart/",
    "Hot 100": "https://www.billboard.com/charts/hot-100/",
    "남미 iTunes": ""
   },
-  "note": "미니 4집, 2026-11-03 18시 발매(확인 시점 발매 2일차): 한터 초동 7일 미완료(확인 시점 1일차 누계 131,893), 써클 첫 집계주 미발표(2026W44까지 공개 안 됨), UK·오리콘 첫 집계주 미발표. 전작은 한터 초동 비교 대상 기준 lip bomb(미니 3집); 그 사이 Pretty Girl(2026-07 리메이크 스페셜 싱글)은 한터 초동 데이터 없음·써클 Top100 미진입이라 제외. 빌보드 아티스트 차트 히스토리 페이지 없음(404)=빌보드200 미진입",
+  "note": "미니 4집, 2026-11-03 18시 발매(확인 시점 발매 2일차): 한터 초동 7일 미완료(확인 시점 1일차 누계 131,893), 써클 첫 집계주 2026W45(11/1~11/7) 미발표, UK·오리콘 첫 집계주 미발표. 전작은 한터 초동 비교 대상 기준 lip bomb(미니 3집); 그 사이 Pretty Girl(2026-07 리메이크 스페셜 싱글)은 한터 초동 데이터 없음·써클 Top100 미진입이라 제외. 빌보드 아티스트 차트 히스토리 페이지 없음(404) — 11/3 발매라 빌보드 200은 아직 집계 전",
   "live": {
    "v": 22.6,
    "raw": 225592,
@@ -2534,7 +2534,7 @@ const D_REAL=[
   "rk": [
    12,
    51,
-   null,
+   17,
    null
   ],
   "c": [
@@ -2557,14 +2557,14 @@ const D_REAL=[
    "전작": "https://www.hanteochart.com/ko/albums/900560078",
    "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "써클 식": "GO HARD 2026년 53,157 + GO HARD (Nemo) 2026년 11,192 = 64,349",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=42&yearTime=3 | https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
+   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=42&yearTime=3 | https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3 | https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/meovv/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-10-26/ | https://www.oricon.co.jp/rank/ja/w/2026-11-02/",
    "UK": "https://www.officialcharts.com/charts/albums-chart/20261016/7502/ | https://www.officialcharts.com/charts/albums-chart/20261023/7502/",
    "Hot 100": "https://www.billboard.com/charts/hot-100/",
    "남미 iTunes": "https://web.archive.org/web/20261022022000/https://kworb.net/charts/aitunes/mx.html"
   },
-  "note": "써클 2026W43까지 반영(W44 미발표→wk3·wk4 집계 전); 버전 엔트리 GO HARD·GO HARD (Nemo) 합산, Top100 진입 주 Total_CNT 기준. 빌보드 MEOVV 차트 히스토리에 Billboard 200 기록 없음. UK는 발매 후 2주(10/16·10/23자 차트) Top100 확인. 오리콘은 발매 후 2주(10-26·11-02자) 주간 앨범 Top50 확인.",
+  "note": "써클은 캐시의 마지막 공개 주까지 반영(2026W44 공개 확인 2026-11-05); 버전 엔트리 GO HARD·GO HARD (Nemo) 합산, Top100 진입 주 Total_CNT 기준. 빌보드 MEOVV 차트 히스토리에 Billboard 200 기록 없음. UK는 발매 후 2주(10/16·10/23자 차트) Top100 확인. 오리콘은 발매 후 2주(10-26·11-02자) 주간 앨범 Top50 확인.",
   "live": null,
   "ins": [
    {
@@ -2794,9 +2794,9 @@ const D_REAL=[
   "sr": 110513,
   "pr": 224291,
   "sst": null,
-  "cum": null,
+  "cum": 12.9,
   "rk": [
-   null,
+   5,
    null,
    null,
    null
@@ -2819,16 +2819,16 @@ const D_REAL=[
   "src": {
    "초동": "https://www.hanteochart.com/ko/albums/912565823",
    "전작": "https://www.hanteochart.com/ko/albums/900560085",
-   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
-   "써클 식": "",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=43&yearTime=3",
+   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
+   "써클 식": "i=! 2026년 128,697 = 128,697 (써클 주간 Total_CNT, Top100 진입 주 기준)",
+   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=44&yearTime=3",
    "빌보드 200": "https://www.billboard.com/artist/xlov/chart-history/tlp/",
    "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-09/",
    "UK": "https://www.officialcharts.com/charts/albums-chart/20261030/7502/",
    "Hot 100": "https://www.billboard.com/charts/hot-100/",
    "남미 iTunes": "https://web.archive.org/web/20261101150008/https://kworb.net/charts/aitunes/cl.html"
   },
-  "note": "미니 3집(아이 이퀄스 아이), 2026-10-28 18시 발매. 공식 영문명 XLOV(스포츠경향 2025-01-07 데뷔 기사 표기 엑스러브(XLOV), 한터 표기 동일); 최근 보도 사진 제공 RBW·스트레인지랩(일간스포츠 2026-10-28). 한터 초동은 7일(10/28~11/3) 집계 완료값. 써클 첫 집계주 2026W44 미발표 → 누적·주차 집계 전. UK는 첫 집계주(10/30자 차트)만 확인(2주차 미발표). 빌보드 아티스트 페이지 없음(404). 오리콘은 첫 집계주(11-09자, 10/26~11/1 판매)만 Top50 확인.",
+  "note": "미니 3집(아이 이퀄스 아이), 2026-10-28 18시 발매. 공식 영문명 XLOV(스포츠경향 2025-01-07 데뷔 기사 표기 엑스러브(XLOV), 한터 표기 동일); 최근 보도 사진 제공 RBW·스트레인지랩(일간스포츠 2026-10-28). 한터 초동은 7일(10/28~11/3) 집계 완료값. 써클은 발매주 2026W44(10/25~31)부터 반영(2026-11-05 공개 확인). UK는 첫 집계주(10/30자 차트)만 확인(2주차 미발표). 빌보드 아티스트 페이지 없음(404). 오리콘은 첫 집계주(11-09자, 10/26~11/1 판매)만 Top50 확인.",
   "live": null,
   "ins": [
    {

@@ -662,8 +662,10 @@ const gr=d=>{const a=d.sr??d.sale,b=d.pr??d.prev;return b&&a!=null?Math.round((a
 // sst = 초동이 숫자가 아닐 때의 상태 (집계 전 / 실물 앨범 없음 등)
 const sstOf=d=>d.sst||'집계 전';
 const grTxt=d=>{if(d.sale==null)return st(sstOf(d));const g=gr(d);return g==null?'<span class="muted">데뷔작</span>':`<span class="${g<0?'dn':'up'}">${g<0?'▼':'▲'} ${Math.abs(g)}%</span>`};
-const sstMsg=d=>({'집계 전':'발매 직후라 아직 발표 전','실물 앨범 없음':'디지털 발매라 초동 집계 대상 아님','확인 불가':'한터 초동 기록을 찾지 못함'})[sstOf(d)]||esc(sstOf(d));
-const saleTxt=d=>d.sale==null?st(sstOf(d)):d.sale+'만';
+// 초동 진행 중(7일 확정 전) 값: 보는 날짜와 상관없이 '확인 날짜 기준'으로 표시 (11/5 세연 님)
+const lvOn=d=>d.sale==null&&d.live&&d.live.v!=null,lvD=d=>d.live.checked?`${+d.live.checked.slice(5,7)}/${+d.live.checked.slice(8,10)} 기준`:'';
+const sstMsg=d=>lvOn(d)?`${lvD(d)} 진행 중 · 한터 ${esc(d.live.per||'')} · 7일 확정 전`:({'집계 전':'발매 직후라 아직 발표 전','실물 앨범 없음':'디지털 발매라 초동 집계 대상 아님','확인 불가':'한터 초동 기록을 찾지 못함'})[sstOf(d)]||esc(sstOf(d));
+const saleTxt=d=>lvOn(d)?`${d.live.v}만`:d.sale==null?st(sstOf(d)):d.sale+'만';
 const cell=v=>num(v)?v+'위':v?st(v):NONE;
 const tag=n=>T(n)?`<span class="nmx" data-ag="${T(n).ag}">${n}</span><span class="agx">${T(n).ag}</span>`:`<span class="nmx">${n}</span>`;
 const best=d=>{const v=d.c.map((r,i)=>[r,CT[i]]).filter(x=>num(x[0]));return v.length?v.sort((a,b)=>a[0]-b[0]).slice(0,2).map(x=>`${x[1]} ${x[0]}위`).join(' · '):d.c.some(x=>x==='집계 전')?st('집계 전'):'해외 미진입'};
@@ -680,6 +682,7 @@ function cbCards(list,old){
  const cols=old?[['빌보드 200',d=>d.c[0]],['빌보드 Hot 100',d=>d.hot]]:[['오리콘',d=>d.c[1]],['해외 최고',d=>null]];
  const same=[];const show=cols.filter(([t,f])=>{if(t==='해외 최고')return true;const v=list.map(f);const allNone=v.every(x=>!num(x));if(allNone){const u=[...new Set(v.map(x=>x==null?(t.includes('Hot')?'미수집':'미진입'):x))];same.push(u.length===1?`${t}: ${list.length}팀 모두 ${u[0]}`:`${t}: 순위에 든 팀 없음 (${u.join(' · ')})`)}return !allNone});
  const rows=list.map(d=>{const nm=`<div class="tcn"><span class="nmx" data-ag="${d.ag}">${d.n}</span><span class="agx">${d.ag}</span><div class="tca">${d.al}</div></div>`;
+  if(lvOn(d))return `<div class="tc ${me(d.n)?'me':''}">${nm}<div class="tcv"><b class="num">${d.live.v}만</b><small>초동 · ${lvD(d)} 진행 중</small></div><div class="tcg"><span class="muted">한터 ${esc(d.live.per||'')}</span><small>7일 확정 전</small></div></div>`;
   if(d.sale==null)return `<div class="tc ${me(d.n)?'me':''}">${nm}<div class="tcp">${st(sstOf(d))} <span class="muted">${sstOf(d)==='집계 전'?'발매 직후라 아직 발표 전':''}</span></div></div>`;
   return `<div class="tc ${me(d.n)?'me':''}">${nm}<div class="tcv"><b class="num">${d.sale}만</b><small>초동</small></div><div class="tcg">${grTxt(d)}<small>${gr(d)==null?'':'전작 대비'}</small></div>${show.map(([t,f])=>`<div class="tcx"><small>${t}</small><span>${t==='해외 최고'?best(d):cell(f(d))}</span></div>`).join('')}</div>`}).join('');
  return rows+(same.length?`<p class="tcnote">${same.join(' · ')}</p>`:'')}
@@ -712,7 +715,7 @@ function draw(){
  if(tab===1){const cs=$('agCb');if(!cs.options.length){cs.add(new Option('전체 (강조 없음)',''));[...new Set(D.map(d=>d.ag))].forEach(v=>cs.add(new Option(v,v)))}cs.value=cbAg;const now=D.filter(d=>d.cb==='now'),old=D.filter(d=>d.cb==='old');
   now.sort((a,b)=>me(b.n)-me(a.n));$('cbNow').innerHTML=cbCards(now,false);$('cbOld').innerHTML=cbCards(old,true);
   const top1=[...now].filter(d=>d.sale!=null).sort((a,b)=>b.sale-a.sale)[0],ups=now.filter(d=>(gr(d)??0)>0).length,dns=now.filter(d=>gr(d)!=null&&gr(d)<0).length;
-  $('cbSum').innerHTML=`<div class="tiles"><div class="tile"><div class="lb">이번 주 컴백</div><div class="v num">${now.length}<small>팀</small></div><div class="s">${now.filter(d=>d.sale==null).length}팀 집계 전</div></div>
+  $('cbSum').innerHTML=`<div class="tiles"><div class="tile"><div class="lb">이번 주 컴백</div><div class="v num">${now.length}<small>팀</small></div><div class="s">${[[now.filter(lvOn).length,'초동 진행 중'],[now.filter(d=>d.sale==null&&!lvOn(d)).length,'집계 전']].filter(([n])=>n).map(([n,t])=>`${n}팀 ${t}`).join(' · ')||'모두 집계'}</div></div>
    <div class="tile"><div class="lb">초동 1위</div><div class="v">${top1?top1.n:'—'}${top1?`<small>${top1.sale}만</small>`:''}</div><div class="s">${top1?top1.ag:'집계된 팀 없음'}</div></div>
    <div class="tile"><div class="lb">전작 대비</div><div class="v num">${ups}<small>팀 성장</small> ${dns}<small>팀 감소</small></div><div class="s">전작이 있는 팀 기준</div></div></div>`;
   const P=[...now,...old],mx=Math.max(...P.flatMap(d=>[d.sale||0,d.prev||0]))*1.06,pct=v=>(v/mx*100).toFixed(1)+'%';
@@ -723,7 +726,7 @@ function draw(){
    <dt>해외</dt><dd>${nov.length?`${nov.length}팀 해외 차트 진입 · ${nov.map(d=>d.n).join(', ')}`:'아직 해외 차트 진입 없음'}</dd>
    <dt>빌보드</dt><dd>발매 약 2주 뒤 발표 · 다음 주 확인</dd>`:'<dd>이번 주 컴백 팀이 없어요</dd>';
   const dbr=d=>{const g=gr(d),col=g==null?'var(--ink2)':g<0?'var(--dn)':'var(--up)';
-   if(d.sale==null)return `<div class="db"><span>${d.n}</span><div class="trk">${d.prev!=null?`<span class="pt pv" style="left:${pct(d.prev)}" title="전작 ${d.prev}만"></span>`:''}</div><span class="gv">${st(sstOf(d))}</span></div>`;
+   if(d.sale==null)return `<div class="db"><span>${d.n}</span><div class="trk">${d.prev!=null?`<span class="pt pv" style="left:${pct(d.prev)}" title="전작 ${d.prev}만"></span>`:''}</div><span class="gv">${lvOn(d)?`<span class="muted">${d.live.v}만 · ${lvD(d)} 진행 중</span>`:st(sstOf(d))}</span></div>`;
    const a=Math.min(d.sale,d.prev??d.sale),b=Math.max(d.sale,d.prev??d.sale);
    return `<div class="db" title="${d.n}: 전작 ${d.prev??'—'}만 → 이번 작 ${d.sale}만"><span>${d.n}</span><div class="trk">${d.prev!=null?`<span class="ln" style="left:${pct(a)};width:${((b-a)/mx*100).toFixed(1)}%;background:${col}"></span><span class="pt pv" style="left:${pct(d.prev)}"></span>`:''}<span class="pt" style="left:${pct(d.sale)};background:${col}"></span></div><span class="gv">${g==null?'<span class="muted">데뷔작</span>':`<span class="${g<0?'dn':'up'}">${g>0?'+':''}${g}%</span>`}</span></div>`};
   $('cbDb').innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${now.map(dbr).join('')}</div>`;$('cbDb2').innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${old.map(dbr).join('')}</div>`;
@@ -742,13 +745,13 @@ function draw(){
   $('agTabs').innerHTML=L.length>1?[['all','전체 아티스트'],...L.map(d=>[d.n,d.n])].map(([k,t])=>`<button data-sub="${k}" class="${agSub===k?'on':''}">${t}</button>`).join(''):'';
   const realList=RR.length?`<div class="c"><div class="ct">이번 주 차트 진입<span>차트 현황 탭 기준</span></div>${(li=>`<ul class="rl">${RR.slice(0,6).map(li).join('')}</ul>${RR.length>6?`<details class="rlmore"><summary>나머지 ${RR.length-6}건 더 보기</summary><ul class="rl">${RR.slice(6).map(li).join('')}</ul></details>`:''}`)(r=>`<li><span><b>${esc(dn(r))}</b> <span class="muted">${esc(r.a)}</span><span class="sg">${esc(r.s)}</span></span><span class="num">${esc(r.t)} ${r.i+1}위 ${rdl(r,r.i)}</span></li>`)}</div>`:'';
   const brow=(k,al,v,mx,ss='집계 전')=>`<div class="br2"><span class="bk ${k}">${k==='pv'?'전작':'이번 작'}</span><span class="bal" title="${esc(al||'')}">${esc(al||'—')}</span><div class="trk">${v==null?st(ss):`<div class="fill" style="width:${v/mx*80}%"></div><span class="num">${v}만</span>`}</div></div>`;
-  const bpair=(d,mx,nm)=>`<div class="bgrp">${nm?`<div class="bgn">${esc(d.n)}</div>`:''}${d.prev!=null?brow('pv',d.pal,d.prev,mx):''}${brow('nw',d.al,d.sale,mx,sstOf(d))}</div>`;
+  const bpair=(d,mx,nm)=>`<div class="bgrp">${nm?`<div class="bgn">${esc(d.n)}</div>`:''}${d.prev!=null?brow('pv',d.pal,d.prev,mx):''}${lvOn(d)?`<div class="br2"><span class="bk nw">이번 작</span><span class="bal" title="${esc(d.al||'')}">${esc(d.al||'—')}</span><div class="trk"><span class="num muted">${d.live.v}만 · ${lvD(d)} 진행 중</span></div></div>`:brow('nw',d.al,d.sale,mx,sstOf(d))}</div>`;
   let h='';
   if(!L.length){h=`<div class="empty">이번 주 ${esc(ag.value)} 소속 팀의 초동·국가별 데이터는 아직 없어요. 아래는 차트 현황 탭에 잡힌 진입 기록이에요.</div>`+realList}
   else if(agSub==='all'){const tot=Math.round(L.reduce((s,d)=>s+(d.sale||0),0)*10)/10,pend=L.filter(d=>d.sale==null).length,top=[...L].sort((a,b)=>(gr(b)??-99)-(gr(a)??-99))[0];
    const mx=Math.max(...L.flatMap(d=>[d.sale||0,d.prev||0]));
    h=`<div class="agcols"><div class="agl"><div class="kpi">${L.map(d=>`<div class="tile" data-sub="${d.n}"><div class="lb">${d.n} 초동 · ${d.al}</div><div class="v num">${saleTxt(d)}</div><div class="s">${d.sale==null?sstMsg(d):grTxt(d)+(gr(d)==null?'':' 전작 대비')}</div><div class="go2">세부 보기 →</div></div>`).join('')}
-    ${L.length<2?'':`<div class="tile"><div class="lb">소속사 합계 초동</div><div class="v num">${pend===L.length?st([...new Set(L.map(sstOf))].length===1?sstOf(L[0]):'집계 전'):tot+'만'}</div><div class="s">${pend===L.length?(L.every(d=>sstOf(d)==='실물 앨범 없음')?'실물 앨범이 없어 합산할 초동이 없어요':'합산할 초동이 아직 없어요'):pend?`${pend}팀 제외 (${[...new Set(L.filter(d=>d.sale==null).map(sstOf))].join(' · ')})`:L.length+'팀 합'}</div></div>`}</div>
+    ${L.length<2?'':`<div class="tile"><div class="lb">소속사 합계 초동</div><div class="v num">${pend===L.length?st([...new Set(L.map(sstOf))].length===1?sstOf(L[0]):'집계 전'):tot+'만'}</div><div class="s">${pend===L.length?(L.every(d=>sstOf(d)==='실물 앨범 없음')?'실물 앨범이 없어 합산할 초동이 없어요':'합산할 초동이 아직 없어요'):pend?`${pend}팀 제외 (${[...new Set(L.filter(d=>d.sale==null).map(d=>lvOn(d)?'초동 진행 중':sstOf(d)))].join(' · ')})`:L.length+'팀 합'}</div></div>`}</div>
    <h3>초동 추이 <span class="muted" style="font-weight:400;font-size:14px">한터 · 만 장</span></h3><div class="c bars2">${(S=>S.slice(0,6).map(d=>bpair(d,mx,true)).join('')+(S.length>6?`<details class="rlmore bmore"><summary><span class="so">전체 ${S.length}팀 보기</span><span class="sc">상위 6팀만 보기</span></summary><div class="bars2">${S.slice(6).map(d=>bpair(d,mx,true)).join('')}</div></details>`:''))(L.length>6?[...L].sort((a,b)=>(b.sale??-1)-(a.sale??-1)):L)}</div>${L.length===1?realList:''}
    </div><aside class="agr"><div class="c"><div class="ct">주목할 점</div><dl class="note">${(()=>{const g=L.filter(d=>gr(d)!=null),gt=[...g].sort((a,b)=>gr(b)-gr(a))[0],ov=L.filter(d=>d.c.some(num));
      return `<dt>성장</dt><dd>${gt?(gr(gt)>0?`${gt.n} 전작 대비 ▲ ${gr(gt)}%${L.length>1?'로 소속사 내 1위':''}`:`전작보다 성장한 팀 없음 (${gt.n} ▼ ${Math.abs(gr(gt))}%)`):L.every(d=>d.sale==null&&sstOf(d)!=='집계 전')?'초동 기록이 없어 비교할 수 없음':'아직 집계 전이라 비교 전'}</dd>
@@ -759,13 +762,13 @@ function draw(){
   else{const d=T(agSub),hc=v=>v<=5?['var(--h1)','#fff']:v<=20?['var(--h2)','#fff']:['var(--h3)','var(--h3-ink)'],mx=Math.max(d.sale||0,d.prev||0);
    h=`<div class="kpi"><div class="tile"><div class="lb">초동 · ${d.al}</div><div class="v num">${saleTxt(d)}</div><div class="s">${d.sale==null?sstMsg(d):grTxt(d)+(gr(d)==null?'':' 전작 대비')}</div></div>
     <div class="tile"><div class="lb">전작 초동</div><div class="v num">${d.prev!=null?d.prev+'만':'<span class="muted">데뷔작</span>'}</div><div class="s">한터 기준</div></div>
-    <div class="tile"><div class="lb">누적 판매</div><div class="v num">${d.cum}만</div><div class="s">써클 누적</div></div>
+    <div class="tile"><div class="lb">누적 판매</div><div class="v num">${d.cum!=null?d.cum+'만':st('집계 전')}</div><div class="s">써클 누적${d.cum!=null?'':' · 써클 주간 집계 후 표시'}</div></div>
     <div class="tile"><div class="lb">해외 차트 진입</div><div class="v num">${d.c.filter(num).length}<small>/ 6개</small></div><div class="s">${best(d)}</div></div></div>
    <div class="g2c"><div class="c" style="display:flex;flex-direction:column;gap:10px"><div class="ct">초동 비교<span>한터 · 만 장</span></div><div class="bars2">${bpair(d,mx,false)}</div>
      <div class="ct" style="margin-top:8px">국가별 순위<span>색이 진할수록 높은 순위</span></div><div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px">${d.c.map((v,i)=>`<div style="text-align:center;font-size:12px;color:var(--muted)">${CT[i]}<div style="margin-top:4px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;${num(v)?`background:${hc(v)[0]};color:${hc(v)[1]}`:'background:var(--sunk)'}">${num(v)?v:v?st(v):'—'}</div></div>`).join('')}</div></div>
-    <div class="c" style="display:flex;flex-direction:column;gap:10px"><div class="ct">발매 후 주차별 순위<span>써클</span></div><div class="cv"><canvas id="cA"></canvas></div><div class="foot">위로 갈수록 높은 순위 (맨 위 = 1위)</div></div></div>`}
+    <div class="c" style="display:flex;flex-direction:column;gap:10px"><div class="ct">발매 후 주차별 순위<span>써클</span></div>${(d.rk||[]).some(v=>v!=null)?`<div class="cv"><canvas id="cA"></canvas></div><div class="foot">위로 갈수록 높은 순위 (맨 위 = 1위)</div>`:`<div class="empty">아직 써클 주간 순위 기록이 없어요 (발매 후 써클 주간 차트 발표 뒤 표시)</div>`}</div></div>`}
   $('agBody').innerHTML=h;
-  if(agSub!=='all'&&L.length){const d=T(agSub),muted=css('--muted'),line=css('--line'),line2=css('--line2'),surf=css('--surface'),acc=css('--acc')||'#5b4bd1';
+  if(agSub!=='all'&&L.length&&$('cA')){const d=T(agSub),muted=css('--muted'),line=css('--line'),line2=css('--line2'),surf=css('--surface'),acc=css('--acc')||'#5b4bd1';
    Chart.defaults.font.family=css('--font');Chart.defaults.font.size=13;Chart.defaults.color=css('--ink2');const ax={grid:{color:line},border:{color:line2},ticks:{color:muted}};
    ch.push(new Chart($('cA'),{type:'line',data:{labels:['1주','2주','3주','4주'],datasets:[{label:d.n,data:d.rk,borderColor:acc,backgroundColor:acc,borderWidth:2,pointRadius:5,pointBorderColor:surf,pointBorderWidth:2,tension:0}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:css('--ink'),titleColor:surf,bodyColor:surf,callbacks:{label:c=>c.raw==null?'차트 밖':c.raw+'위'}}},scales:{x:ax,y:{...ax,reverse:true,min:1,title:{display:true,text:'순위',color:muted}}}}}))}}

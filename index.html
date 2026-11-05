@@ -703,7 +703,7 @@ function draw(){
    const NTL=Object.values(NT).sort((a,b)=>b.c.size-a.c.size);
    $('trend').innerHTML=`<div class="tiles">
    <div class="tile"><div class="lb">${lb} 차트 K-POP 진입</div><div class="v num">${K.length}<small>/ ${R.length}자리</small></div><div class="s">${L.length}개 차트 Top 10 기준</div></div>
-   <div class="tile"><div class="lb">가장 많은 차트에 오른 팀</div><div class="v">${top?esc(top.en||top.n):'없음'}${top&&top.a?`<small>${esc(top.a)}</small>`:''}</div><div class="s" title="${top?esc([...top.c].join(', ')):''}">${top?`${L.length}개 차트 중 ${top.c.size}개`:''}</div></div>
+   ${(TI=>`<div class="tile"><div class="lb">가장 많은 차트에 오른 팀</div><div class="v">${top?TI.map(t=>esc(t.en||t.n)).join(' · '):'없음'}${top&&TI.length===1&&top.a?`<small>${esc(top.a)}</small>`:''}</div><div class="s" title="${esc(TI.map(t=>(t.en||t.n)+': '+[...t.c].join(', ')).join(' / '))}">${top?`${L.length}개 차트 중 ${TI.length>1?'각 ':''}${top.c.size}개`:''}</div></div>`)(top?Object.values(cnt).filter(x=>x.c.size===top.c.size):[])}
    <div class="tile"><div class="lb">K-POP 신규 진입 <span class="new">NEW</span></div><div class="v num">${NEW.length}<small>건</small></div>${NEW.length?`<details class="more"><summary>전체 ${NEW.length}건 보기</summary><p>${esc(NEW.join(', '))}</p></details>`:''}</div></div>`;return}
   const k=L.reduce((s,c)=>s+c.l.filter(isK).length,0);
   const NEW=L.flatMap(c=>c.l.map((n,i)=>DL[(i+c.t.length)%10]==='N'&&isK(n)?`${n} (${c.t})`:null)).filter(Boolean);

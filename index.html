@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>K-POP 주간 리포트 대시보드</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* 레이아웃: 신문 1면처럼. 이중 괘선 마스트헤드 → 섹션 내비 → 헤드라인 + 요약 → 괘선으로 나눈 단(column).
+   상자·그림자 없이 선으로만 구분. 신문지 색 한 가지 테마로 고정. 큰 제목만 Anton, 나머지는 Noto Sans KR */
+/* 폰트 (assets/fonts, 모두 OFL): Fraunces = 70년대 잡지 제목·숫자, Gowun Dodum = 한글 제목(부드러운 옛 인쇄물 느낌), Pretendard = 본문, Anton = 신문 순위 숫자 */
+@font-face{font-family:"Fraunces";src:url("assets/fonts/Fraunces.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Gowun Dodum";src:url("assets/fonts/GowunDodum-Regular.woff") format("woff");font-display:swap}
+@font-face{font-family:"Pretendard";src:url("assets/fonts/PretendardVariable.woff2") format("woff2");font-weight:45 920;font-display:swap}
+@font-face{font-family:"Jost";src:url("assets/fonts/Jost.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Anton";src:url("assets/fonts/Anton-Regular.ttf") format("truetype");font-display:swap}
+:root{
+ color-scheme:light;
+ --font:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+ --display:"Anton","Pretendard",Impact,sans-serif;
+ --retro:"Fraunces","Gowun Dodum",Georgia,serif;
+ --kr:"Gowun Dodum","Pretendard",sans-serif;
+ --bg:#fcfbf8;--surface:#fcfbf8;--sunk:#f1eee7;--ink:#161514;--ink2:#45413c;--muted:#7a756d;
+ --line:#e7e3da;--line2:#161514;
+ --acc:#2f6fd6;
+ --acc-ink:#1f4fa8;--acc-tint:#dbe3f1;--acc-tint2:#a9c0ea;
+ --up:#2d6a2d;--dn:#c23b22;--new:#c23b22;
+ --s1:#2f6fd6;--s2:#d1492e;--s3:#c98f00;--pos:#2f6fd6;--neg:#d1492e;--other:rgba(122,117,109,.35);
+ --h1:#1f4fa8;--h2:#5b8de0;--h3:#c9d8f2;--h3-ink:#161514;
+ --q1:color-mix(in srgb,var(--acc) 9%,transparent);
+ --on-acc:#161514;
+}
+body{--q1:color-mix(in srgb,var(--acc) 9%,transparent)}
+body[data-pg="0"]{--acc:#4a9be0;--acc-ink:#1d5d9c;--acc-tint:#d5e6f6;--acc-tint2:#9fc6ec;--on-acc:#161514}
+body[data-pg="1"]{--acc:#d6202f;--acc-ink:#a8121f;--acc-tint:#f6d9d6;--acc-tint2:#eda29e;--on-acc:#ffffff}
+body[data-pg="2"]{--acc:#c9961e;--acc-ink:#6b4f0a;--acc-tint:#ece0bf;--acc-tint2:#dcc27e;--on-acc:#161514}
+body[data-pg="3"]{--acc:#2f9a5a;--acc-ink:#1d6a3c;--acc-tint:#d3eadb;--acc-tint2:#9fd1b1;--on-acc:#ffffff}
+*{box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);margin:0;font-size:15px;line-height:1.6;
+ padding-block:28px 56px;padding-left:max(clamp(16px,5vw,96px),env(safe-area-inset-left,0px));padding-right:max(clamp(16px,5vw,96px),env(safe-area-inset-right,0px))}
+.w{word-break:keep-all;overflow-wrap:break-word;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* 마스트헤드 */
+.mast{text-align:center}
+.mast .rule2{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);height:7px}
+.mast h1{font-family:var(--display);font-weight:400;font-size:clamp(56px,10vw,132px);line-height:.95;letter-spacing:.005em;margin:14px 0 10px;text-transform:uppercase}
+.dateline{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 18px;font-size:13px;font-weight:700;letter-spacing:.12em;padding:8px 0}
+.dateline i{font-style:normal;font-weight:400}
+.demo{font-size:13px;color:var(--muted);margin:0;text-align:center}
+
+/* 섹션 내비 */
+.tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.tab{font:inherit;font-size:15px;font-weight:700;letter-spacing:.02em;padding:12px 22px;cursor:pointer;border:none;background:none;color:var(--ink2);position:relative}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink)}
+.tab.on::after{content:"";position:absolute;left:22px;right:22px;bottom:6px;height:3px;background:var(--acc)}
+.pg{display:none}.pg.on{display:flex;flex-direction:column;gap:20px}
+
+/* 헤드라인 */
+.ph h2{font-size:clamp(26px,3vw,36px);font-weight:900;letter-spacing:-.02em;line-height:1.25;margin:4px 0 0;text-wrap:balance}
+.ph p{margin:6px 0 0;color:var(--ink2);font-size:15px;max-width:100ch}
+.ptag{display:none}
+h3{font-size:18px;font-weight:900;letter-spacing:-.01em;margin:6px 0 0}
+.c{background:none;border-top:2px solid var(--ink);padding:12px 0 0;min-width:0}
+.legend{font-size:13px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
+
+/* 필터 · 버튼 */
+.flt{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.flt label{font-size:13px;font-weight:700;letter-spacing:.06em}
+select{font:inherit;font-size:15px;font-weight:500;padding:6px 32px 6px 10px;border:1px solid var(--ink);border-radius:0;background:var(--bg);color:var(--ink)}
+.seg{display:inline-flex;align-self:flex-start;border:1px solid var(--ink)}
+.seg button{font:inherit;font-size:14px;font-weight:500;border:none;border-right:1px solid var(--ink);background:none;padding:6px 18px;cursor:pointer;color:var(--ink)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--ink);color:var(--bg)}
+button.go{font:inherit;font-size:14px;font-weight:700;padding:8px 16px;border:1px solid var(--ink);color:var(--ink);background:none;cursor:pointer;align-self:flex-start}
+button.go:hover{background:var(--ink);color:var(--bg)}
+
+/* 요약 수치: 괘선으로 나눈 3단 */
+.tiles,.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border-top:2px solid var(--ink);border-bottom:1px solid var(--ink)}
+.tile{padding:14px 18px;border-right:1px solid var(--line);min-width:0;background:none}
+.tile:last-child{border-right:none}
+.tiles .tile:first-child,.kpi .tile:first-child{padding-left:0}
+.tile .lb{font-size:13px;font-weight:700;color:var(--ink2)}
+.tile .v{font-family:var(--display);font-weight:400;font-size:44px;line-height:1.1;margin-top:4px}
+.tile .v small{font-family:var(--font);font-size:15px;font-weight:500;color:var(--muted);margin-left:6px}
+.tile .s{font-size:13px;color:var(--muted);margin-top:4px}
+.newl{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:13px;color:var(--ink2)}
+.newl span{white-space:nowrap}
+.newl span+span::before{content:"· ";color:var(--muted)}
+details.more summary{cursor:pointer;font-size:12px;color:var(--acc-ink);margin-top:6px}
+details.more p{font-size:12px;color:var(--muted);margin:4px 0 0}
+
+/* 차트 묶음 */
+.sec{display:flex;flex-direction:column;gap:14px}
+.sech{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:3px double var(--ink);padding-bottom:6px;margin-top:14px}
+.sech h3{margin:0;font-size:22px}
+.sech span{font-size:13px;color:var(--muted)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+@media (max-width:1100px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:680px){.g3,.g2{grid-template-columns:1fr}}
+.chc{padding:0 0 18px;border-top:none}
+.chh{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:6px 0 8px}
+.pl{flex:none;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}
+.pl img{max-width:28px;max-height:28px;border-radius:6px}
+.chh{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:52px}
+.chh .t{min-width:0;line-height:1.25}
+.chh .meta{text-align:right}
+.chh .meta{font-size:12px;color:var(--muted);white-space:nowrap;text-align:right}
+.chh .meta a{color:var(--muted)}
+.rk{list-style:none;margin:0;padding:0}
+.rk li{display:grid;grid-template-columns:30px minmax(0,1fr) 44px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.rk .no{font-family:var(--display);font-size:22px;line-height:1;text-align:left}
+.rk .nm{min-width:0}
+.rk .sg{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .ar{display:block;font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .ar em{font-style:normal;color:var(--muted)}
+.rk li.kp .ar b{color:var(--acc-ink)}
+.rk .ar b{font-weight:500}
+.rk .dl{text-align:right;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+[data-ag]{cursor:pointer}
+.rk li[data-ag]:hover .ar b{text-decoration:underline}
+.up{color:var(--up)}.dn{color:var(--dn)}.new{color:var(--new);font-weight:700;font-size:11px;letter-spacing:.06em}.flat{color:var(--muted)}
+
+/* 상태 표시: 집계 전 / 미진입 / 비공개 */
+.st{display:inline-block;font-size:12px;font-weight:500;padding:0 6px;line-height:20px;white-space:nowrap}
+.s-pend{border:1px dashed var(--ink2);color:var(--ink2)}
+.s-priv{background:var(--sunk);color:var(--ink2)}
+.none{color:var(--muted);font-size:13px}
+
+/* 표 */
+.tw{overflow-x:auto;border-top:2px solid var(--ink);border-bottom:1px solid var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tw table{min-width:600px}
+th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+th{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink2);border-bottom:1px solid var(--ink)}
+tr:last-child td{border-bottom:none}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left;padding-left:0}
+tr.me td{background:var(--acc-tint)}
+.nmx{font-weight:700}
+.agx{color:var(--muted);font-size:13px;margin-left:6px}
+.ctab th,.ctab td{text-align:center}.ctab th:first-child,.ctab td:first-child{text-align:left}
+
+/* 컴백 */
+.cbg{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:32px;align-items:start}
+@media (max-width:1040px){.cbg{grid-template-columns:1fr}}
+.cbl,.cbr{display:flex;flex-direction:column;gap:14px;min-width:0}
+.cbr .c{display:flex;flex-direction:column;gap:12px}
+.ct{font-size:16px;font-weight:900}
+.ct span{font-weight:400;font-size:13px;color:var(--muted);margin-left:6px}
+.ins{font-size:15px;font-weight:700;line-height:1.5}
+.db{display:grid;grid-template-columns:96px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:14px}
+.db>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.db .trk{position:relative;height:22px}
+.db .trk::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid var(--line)}
+.db .ln{position:absolute;top:50%;height:3px;margin-top:-1.5px}
+.db .pt{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%}
+.db .pv{background:var(--bg);border:2px solid var(--muted)}
+.db .gv{text-align:right;font-variant-numeric:tabular-nums;font-size:13px}
+.wf,.wfh{display:grid;grid-template-columns:96px repeat(6,minmax(0,1fr)) 36px;gap:3px;align-items:center;font-size:14px}
+.wf>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wf i{height:16px;background:var(--sunk)}
+.wf i.on{background:var(--acc)}
+.wf b{font-weight:500;text-align:right;font-size:13px;color:var(--ink2)}
+.wfh{font-size:11px;color:var(--muted);text-align:center}
+
+/* 소속사 */
+.agban{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:6px 0 14px;border-bottom:1px solid var(--ink)}
+.agmk{display:inline-flex;align-items:center;justify-content:center;height:56px;min-width:56px}
+.agmk img{max-height:48px;max-width:160px;object-fit:contain;mix-blend-mode:multiply}
+.agban .nm{font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1.2}
+.agban .sub{font-size:14px;color:var(--ink2)}
+.subt{display:flex;flex-wrap:wrap;gap:6px 18px}
+.subt button{font:inherit;font-size:14px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;color:var(--ink2);padding:4px 0;cursor:pointer}
+.subt button.on{color:var(--ink);font-weight:700;border-bottom-color:var(--acc)}
+.tile[data-sub]{cursor:pointer}.tile[data-sub]:hover .lb{text-decoration:underline}
+.tile .go2{font-size:12px;color:var(--acc-ink);margin-top:6px}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:12px;align-items:center;font-size:14px}
+.bar .lab{color:var(--ink2)}
+.bar .trk{display:flex;align-items:center;gap:8px}
+.bar .fill{height:16px}
+.note{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px;margin:0}
+.note dt{font-weight:900}
+.note dd{margin:0}
+.g2c{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+@media (max-width:860px){.g2c{grid-template-columns:1fr}}
+.rl{list-style:none;margin:0;padding:0}
+.rl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rl .sg{display:block;font-size:12px;color:var(--muted)}
+.empty{font-size:14px;color:var(--ink2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+
+/* 비교: 팀 고르기 */
+.pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);padding:12px 0}
+@media (max-width:760px){.pick{grid-template-columns:1fr;gap:10px}}
+.pk{display:flex;align-items:center;gap:10px;min-width:0}
+.pk .sw{flex:none;width:12px;height:12px;border-radius:50%}
+.pk select{flex:1;min-width:0}
+.pk .alg{flex:none;height:28px;width:56px;object-fit:contain;mix-blend-mode:multiply}
+.g4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px}
+@media (max-width:760px){.g4{grid-template-columns:1fr}}
+.g4 .c{display:flex;flex-direction:column;gap:10px}
+.cv{position:relative;height:300px}
+.foot{font-size:12px;color:var(--muted);margin-top:auto}
+#heat{height:300px;overflow-x:auto}
+#heat table{height:100%;min-width:480px;font-size:14px}
+#heat th,#heat td{text-align:center;padding:6px;border:2px solid var(--bg);white-space:normal}
+#heat th{font-size:12px;border-bottom:2px solid var(--bg)}
+#heat tbody th{text-align:left;font-size:14px;color:var(--ink);font-weight:700;white-space:nowrap}
+#heat td.e{background:var(--sunk)}
+.sw3{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.cv4{position:relative;height:460px}
+.src{font-size:12px;color:var(--muted);border-top:3px double var(--ink);padding-top:12px;margin:8px 0 0}
+
+/* 페이지 강조색: 띠 · 섹션 머리 · 탭 */
+.band{height:14px;background:var(--acc);margin-top:-8px}
+.tab.on{background:var(--acc);color:var(--on-acc)}
+.tab.on::after{display:none}
+.ph h2{display:inline;background:linear-gradient(transparent 62%,var(--acc-tint2) 62%)}
+.sech{display:flex;align-items:center;gap:14px;border-bottom:none;padding:0}
+.sech h3{font-size:22px;white-space:nowrap}
+.sech::after{content:"";order:2;flex:1;height:12px;background:var(--acc)}
+.sech span{order:3;white-space:nowrap}
+/* 요약 칸은 모두 같은 모양 (한 칸만 칠하지 않음). 숫자 밑에 페이지 색 짧은 선 */
+.tile .v{display:inline-block;border-bottom:4px solid var(--acc);padding-bottom:2px}
+.tile .v:has(.st,.muted){border-bottom:none}
+.chh{border-bottom-color:var(--ink)}
+.flt{background:var(--acc-tint);border:none;padding:10px 14px}
+.agban .nm{box-shadow:inset 0 -10px 0 var(--acc-tint2);display:inline}
+.subt button.on{border-bottom-color:var(--acc)}
+
+/* ===== 레트로 디테일 ===== */
+.mhead{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px);margin:12px 0 6px}
+.vinyl{width:clamp(64px,8vw,104px);height:auto;flex:none;animation:spin 8s linear infinite}
+.vinyl .lbl{fill:var(--acc)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mast h1{font-family:var(--retro);font-weight:900;font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144;font-size:clamp(52px,9vw,124px);line-height:.95;letter-spacing:-.025em;text-transform:none;margin:0;color:var(--ink);text-shadow:.045em .045em 0 var(--acc)}
+.dateline{font-family:var(--font);font-weight:700}
+.player{display:flex;align-items:center;gap:12px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:6px 4px;font-size:12px;font-weight:700;letter-spacing:.08em}
+.player .ctl{font-size:13px;line-height:1}
+.player .play{display:inline-flex;width:24px;height:24px;border:1.5px solid var(--ink);border-radius:50%;align-items:center;justify-content:center;font-size:10px;padding-left:2px}
+.player .np{white-space:nowrap}
+.player .wave{flex:1;display:flex;align-items:center;gap:2px;height:22px;overflow:hidden;min-width:0}
+.player .wave i{flex:none;width:2px;background:var(--ink)}
+.player .wave i.on{background:var(--acc)}
+.band{display:none}
+.tab{font-family:var(--kr);font-size:17px;font-weight:400;letter-spacing:0}
+.ph h2{font-family:var(--kr);font-weight:400;font-size:clamp(28px,3vw,40px);letter-spacing:-.02em}
+h3,.ct,.chh .t,.agban .nm,.note dt{font-family:var(--kr);font-weight:400}
+/* 고운돋움은 굵기가 하나라 제목만 살짝 획을 더해 무게를 줌 */
+.ph h2,h3,.ct,.chh .t,.agban .nm,.tab.on,.sech .tk b{-webkit-text-stroke:.35px currentColor}
+.sech h3{font-size:26px}
+.chh .t{font-size:18px}
+.ct{font-size:19px}
+.agban .nm{font-size:32px}
+.tile .lb{font-family:var(--font);letter-spacing:.02em}
+.tile .v{font-family:var(--font);font-weight:800;font-size:44px;letter-spacing:-.03em}
+/* 섹션 머리: 콘서트 티켓 라벨 + 강조색 막대 */
+.sech .tk{order:1;display:inline-flex;align-items:center;gap:10px;background:var(--acc);color:var(--on-acc);padding:6px 18px;font-family:var(--font);font-size:11px;font-weight:800;letter-spacing:.14em;
+ -webkit-mask:radial-gradient(circle 6px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 6px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+ mask:radial-gradient(circle 6px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 6px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.sech .tk b{font-family:var(--kr);font-weight:400;font-size:19px;letter-spacing:-.01em}
+.sech .tk i{font-style:normal;border-left:1.5px dashed currentColor;padding-left:10px;opacity:.85}
+.sech::after{height:4px;background:var(--ink)}
+/* 순위: 1위는 작은 레코드판 */
+.rk .no{font-family:var(--display)}
+.rk li:first-child .no{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:13px;color:var(--on-acc);
+ background:radial-gradient(circle,var(--acc) 0 42%,#161514 43% 100%);box-shadow:inset 0 0 0 3px #161514,inset 0 0 0 4px #3a3733}
+/* NEW 스티커 */
+.new{display:inline-block;font-family:var(--font);font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ink);background:#f2c12e;border:1.5px solid var(--ink);border-radius:999px;padding:0 6px}
+.src{font-family:var(--font)}
+@media (max-width:640px){.player .np:last-child{display:none}.player .np{font-size:11px}}
+@media (prefers-reduced-motion:reduce){.vinyl{animation:none}}
+
+/* ===== 히어로 (Playnist 느낌) ===== */
+.hero{position:relative;overflow:hidden;background-color:var(--acc);background-image:radial-gradient(rgba(22,21,20,.13) 1.2px,transparent 1.3px);background-size:7px 7px;border:2px solid var(--ink);padding:14px 14px 28px}
+.hnav{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;background:#f4e7cf;border:2px solid var(--ink);padding:6px 8px 6px 14px;position:relative;z-index:2}
+.hlogo{font-family:"Fraunces",serif;font-weight:900;font-variation-settings:"SOFT" 100,"WONK" 0,"opsz" 144;font-size:23px;letter-spacing:-.02em;color:var(--ink)}
+.hero .tabs{border:none;gap:4px;justify-content:flex-end}
+.hero .tab{font-family:var(--font);font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--ink);padding:7px 14px;-webkit-text-stroke:0}
+.hero .tab.on{background:var(--ink);color:#f4e7cf;box-shadow:3px 3px 0 var(--acc-ink)}
+.hbody{position:relative;padding:22px 8px 0;min-height:340px}
+.hvinyl{position:absolute;right:-70px;top:30px;width:min(46vw,440px);height:auto;animation:spin 14s linear infinite;z-index:0}
+.hkick{position:relative;z-index:1;margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--on-acc)}
+.hero h1{position:relative;z-index:1;font-family:"Fraunces",serif;font-weight:900;font-variation-settings:"SOFT" 100,"WONK" 0,"opsz" 144;font-size:clamp(72px,12.5vw,184px);line-height:.86;letter-spacing:-.035em;margin:0;text-transform:lowercase;
+ color:#f4e7cf;-webkit-text-stroke:.055em #161514;paint-order:stroke fill;text-shadow:.06em .06em 0 #161514}
+.hrow{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:22px}
+.hbox{background:#f4e7cf;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:17px;font-weight:800;line-height:1.35;color:var(--ink)}
+.hcta{background:var(--ink);color:#f4e7cf;border:2px solid #f4e7cf;outline:2px solid var(--ink);padding:10px 18px;font-size:15px;font-weight:800;letter-spacing:.02em}
+.player{margin-top:-8px;overflow:hidden;max-width:100%}
+@media (max-width:640px){.hbody{min-height:260px}.hvinyl{right:-90px;top:60px;width:300px}.hero .tab{padding:6px 9px;font-size:13px}}
+
+/* 폰: 위 메뉴는 로고만, 페이지 탭은 화면 아래 고정 탭바 (웹앱처럼) */
+.tshort{display:none}
+@media (max-width:640px){
+ .hnav{justify-content:center;padding:8px}
+ .hero .tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#f4e7cf;border-top:2px solid var(--ink);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+ .hero .tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;font-size:13px;box-shadow:none!important;background:none!important;color:var(--ink2)!important}
+ .hero .tab::before{content:"";width:28px;height:5px;border-radius:3px;background:transparent}
+ .hero .tab.on{color:var(--ink)!important;font-weight:800}
+ .hero .tab.on::before{background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+ .tlong{display:none}.tshort{display:inline}
+ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+ .hkick{font-size:10px;letter-spacing:.1em}
+ .hero h1{font-size:clamp(64px,19vw,96px)}
+ .sech{flex-wrap:wrap;row-gap:4px}
+ .sech>span:not(.tk){flex-basis:100%;white-space:normal}
+}
+
+/* ===== 5차: 탭 위치 · 버튼 · 간격 · 컴백 카드 ===== */
+.hdate{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink)}
+.tabs{position:sticky;top:0;z-index:40;background:var(--bg);display:flex;justify-content:center;gap:8px;padding:10px 0;border-top:none;border-bottom:1px solid var(--line)}
+.tab{font-family:var(--kr);font-size:17px;padding:8px 20px;border:1.5px solid var(--ink);border-radius:999px;background:var(--bg);color:var(--ink)}
+.tab.on{background:var(--acc);color:var(--on-acc);box-shadow:3px 3px 0 var(--ink)}
+.tab.on::after{display:none}
+.seg{border:none;gap:6px;display:inline-flex}
+.seg button{border:1.5px solid var(--ink)!important;border-radius:999px;padding:6px 18px;background:var(--bg)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.pg.on{gap:16px}
+.sec{gap:10px;margin-top:22px}
+.sech{margin:0 0 4px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 26px}
+.g3{gap:0 28px}
+.chc{padding-bottom:6px}
+.rk li{padding:6px 0;min-height:0}
+@media (max-width:1180px){#chList .g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:680px){#chList .g4{grid-template-columns:1fr}}
+.tcwrap{display:flex;flex-direction:column;gap:8px}
+.tchead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.tchead h3{margin:0;font-size:22px}
+.tchead span{font-size:13px;color:var(--muted)}
+.tchead .go{margin-left:auto;align-self:center;border-radius:999px;padding:6px 14px}
+.tc{display:grid;grid-template-columns:minmax(180px,1.4fr) 130px 120px repeat(2,minmax(110px,1fr));gap:12px 20px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.tc.me{background:var(--acc-tint);padding-left:10px;padding-right:10px}
+.tcn .nmx{font-size:17px}
+.tca{font-size:13px;color:var(--muted);margin-top:2px}
+.tcv b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.tcv small,.tcg small,.tcx small{display:block;font-size:12px;color:var(--muted)}
+.tcg{font-size:16px;font-weight:700}
+.tcx span{font-size:15px}
+.tcp{grid-column:2/-1;font-size:14px}
+.tcnote{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.g2c .c{display:flex;flex-direction:column;gap:12px}
+.db{grid-template-columns:120px minmax(0,1fr) 72px;font-size:15px}
+.db .trk{height:30px}
+.db .pt{width:16px;height:16px;margin:-8px 0 0 -8px}
+.db .ln{height:4px;margin-top:-2px}
+.wf,.wfh{grid-template-columns:120px repeat(6,minmax(0,1fr)) 40px;gap:4px;font-size:15px}
+.wf i{height:24px}
+.wfh{font-size:12px}
+.legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%}
+.legend .dot.pv{background:var(--bg);border:2px solid var(--muted)}
+.agban{gap:14px 20px;padding:4px 0 12px}
+.agmk img{max-height:56px;max-width:200px}
+.agban .nm{font-size:30px;box-shadow:inset 0 -10px 0 var(--acc-tint2)}
+@media (max-width:760px){
+ .tc{grid-template-columns:1fr 1fr;gap:8px 16px}
+ .tcn{grid-column:1/-1}.tcp{grid-column:1/-1}
+}
+@media (max-width:640px){
+ .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#f4e7cf;border-top:2px solid var(--ink);border-bottom:none;
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+ .tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;font-family:var(--font);font-size:13px;font-weight:700;border:none;border-radius:0;box-shadow:none!important;background:none!important;color:var(--ink2)!important}
+ .tab::before{content:"";width:28px;height:5px;border-radius:3px;background:transparent}
+ .tab.on{color:var(--ink)!important;font-weight:800}
+ .tab.on::before{background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+ .hdate{display:none}
+ .htag{display:none}
+ .hnav{justify-content:center}
+ .hero{padding:12px 12px 16px}
+ .hbody{min-height:0;padding:6px 4px 0}
+ .hero h1{font-size:clamp(52px,16vw,72px)}
+ .hvinyl{width:220px;right:-80px;top:10px}
+ .hrow{margin-top:12px}
+ .hbox{font-size:14px;padding:8px 12px;box-shadow:3px 3px 0 var(--ink)}
+ .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .tiles .tile{padding:10px 8px;border-right:1px solid var(--line);border-bottom:none}
+ .tiles .tile:first-child{padding-left:0}.tiles .tile:last-child{border-right:none}
+ .tiles .tile .lb{font-size:11px;line-height:1.35}
+ .tiles .tile .v{font-size:24px}
+ .tiles .tile .v small{font-size:11px;margin-left:2px}
+ .tiles .tile .s{display:none}
+}
+
+/* 6차: 히어로 중복 제거 · 주차 선택 */
+.htag{font-size:15px;font-weight:800;color:var(--ink)}
+.hweek{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ink)}
+.hweek select{font-weight:800;font-size:15px;padding:5px 30px 5px 10px;border:2px solid var(--ink);border-radius:999px;background:#fff8ea}
+.hbody{min-height:0;padding:18px 8px 6px}
+/* 제목 글자 아래(y·p 꼬리, 그림자)가 배너 테두리에 잘리지 않게 여백 확보 */
+.hero h1{padding-bottom:.22em}
+.hero h1{font-size:clamp(72px,11vw,160px)}
+.hvinyl{width:min(36vw,360px);top:-10px;right:-60px}
+.hero{padding-bottom:18px}
+
+/* 컴백: 팀 카드(왼쪽) + 관련 그래프·인사이트(오른쪽) */
+.cbrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:32px;align-items:start}
+.cbrow .side{display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--ink);padding-top:12px}
+.cbrow .tc{grid-template-columns:minmax(150px,1.3fr) 110px 100px repeat(2,minmax(90px,1fr))}
+.cbrow .db{grid-template-columns:96px minmax(0,1fr) 64px}
+.cbrow .wf,.cbrow .wfh{grid-template-columns:96px repeat(6,minmax(0,1fr)) 36px}
+.cbrow .wf i{height:18px}
+.cbrow .db .trk{height:24px}
+@media (max-width:1040px){.cbrow{grid-template-columns:1fr}}
+@media (max-width:760px){.cbrow .tc{grid-template-columns:1fr 1fr}.cbrow .tcn,.cbrow .tcp{grid-column:1/-1}.cbrow .db,.cbrow .wf,.cbrow .wfh{grid-template-columns:76px minmax(0,1fr) 56px}.cbrow .wf,.cbrow .wfh{grid-template-columns:76px repeat(6,minmax(0,1fr)) 32px}.tchead .go{margin-left:0}}
+
+/* 소속사: 머리 한 줄 + 2단 */
+.agtop{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.agtop .agban{border:none;padding:0}
+.agflt{background:var(--acc-tint);border-radius:999px;padding:6px 8px 6px 16px}
+.agcols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:32px;align-items:start}
+.agl,.agr{display:flex;flex-direction:column;gap:16px;min-width:0}
+.agr .c{display:flex;flex-direction:column;gap:10px}
+.agr .note{grid-template-columns:auto 1fr;font-size:14px}
+.agl .bar{grid-template-columns:minmax(110px,170px) minmax(0,1fr)}
+.agl .kpi .tile{min-width:0}
+@media (max-width:1040px){.agcols{grid-template-columns:1fr}}
+
+/* ===== 7차: 전체 군더더기 정리 — 설명 글·선 줄이기 ===== */
+.player{display:none}
+.ph p,.foot,#p1>.legend,#p0>.legend{display:none}
+.tabs{border-bottom:none}
+.c{border-top:none;padding-top:0}
+.tiles,.kpi{border:none;gap:12px}
+.tile,.tiles .tile:first-child,.kpi .tile:first-child{background:var(--sunk);border:none;border-radius:14px;padding:14px 18px}
+.chh{border-bottom:1px solid var(--line)}
+.sech::after{height:1px;background:var(--line)}
+.sech>span:not(.tk){display:none}
+.tchead{border-bottom:none;padding-bottom:0}
+.tc{border-bottom:1px solid var(--line)}
+.cbrow .side,.g4 .c,.g2c .c,.agr .c{border-top:none;padding-top:0}
+.agtop{border-bottom:none;padding-bottom:0}
+.tw{border:none}
+th{border-bottom:1px solid var(--line)}
+.pick{border:none;background:var(--sunk);border-radius:14px;padding:12px 16px}
+.src{border-top:1px solid var(--line)}
+.tcnote{display:none}
+.ins{font-size:14px}
+.flt .muted,.tchead>span,.tcp .muted,.tile .go2{display:none}
+.tile[data-sub]:hover{outline:2px solid var(--acc)}
+#p3 .g4{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px}
+@media (max-width:760px){#p3 .g4{grid-template-columns:1fr}}
+@media (max-width:640px){.tiles .tile{border-radius:12px;padding:10px 10px;border-right:none}.tiles{gap:8px}}
+
+/* 8차: 컴백 페이지 여유 — 오른쪽 그래프를 블록별 카드로 나누고 행 간격·크기 키움, 전체 폭 조금 넓힘 */
+.w{max-width:1480px}
+.cbrow{gap:40px;margin-bottom:28px}
+.cbrow .side{gap:16px}
+.cbrow .side .ct{font-size:18px;margin:0}
+.cbrow .side>#cbDb,.cbrow .side>#cbWf,.cbrow .side>#cbDb2,.cbrow .side>#cbWf2,.cbrow .side>#oldIns{background:var(--sunk);border-radius:14px;padding:14px 16px}
+.cbrow .side .ct+.ins{margin-top:-6px}
+.cbrow .db{grid-template-columns:110px minmax(0,1fr) 70px;font-size:15px;padding:4px 0}
+.cbrow .db .trk{height:30px}
+.cbrow .wf,.cbrow .wfh{grid-template-columns:110px repeat(6,minmax(0,1fr)) 40px;gap:5px;font-size:15px}
+.cbrow .wf{padding:3px 0}
+.cbrow .wf i{height:22px;border-radius:4px}
+.cbrow .wfh{font-size:12px}
+.cbrow .side .note{gap:10px 16px;font-size:15px}
+.tc{padding:18px 0}
+.tcwrap{gap:12px}
+.tchead h3{font-size:24px}
+
+/* 9차: 소속사 페이지 — 선택칸 왼쪽, 오른쪽 열 채우기 */
+.agtop{justify-content:flex-start;gap:14px 28px;background:var(--sunk);border-radius:16px;padding:14px 20px;align-items:center}
+.agtop .agflt{order:0;background:var(--bg);margin:0}
+.agtop .agban{order:1}
+.agmk{height:48px;min-width:0}
+.agmk img{max-height:44px;max-width:170px}
+.agban .sub{font-size:15px;color:var(--ink2)}
+.subt{gap:8px;margin-top:2px}
+.subt button{border:1.5px solid var(--ink);border-radius:999px;padding:6px 16px;color:var(--ink)}
+.subt button.on{background:var(--acc);border-color:var(--ink);color:var(--on-acc);box-shadow:2px 2px 0 var(--ink)}
+.agcols{gap:28px}
+.agr .c{background:var(--sunk);border-radius:16px;padding:16px 18px;gap:12px}
+.agr .note{font-size:15px;gap:10px 16px}
+.agr .tw{overflow-x:auto}
+.agr .tw table{min-width:0;font-size:13px}
+.agr .ctab th,.agr .ctab td{padding:8px 6px}
+.agr .rl li{font-size:14px}
+.agl .bar{font-size:14px}
+.rlmore summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--acc-ink);padding:8px 0 2px;list-style:none}
+.rlmore summary::-webkit-details-marker{display:none}
+.rlmore summary::after{content:" ▾"}
+.bmore>.bars2{margin-top:16px}.bmore[open] .so,.bmore:not([open]) .sc{display:none}.rlmore[open] summary::after{content:" ▴"}
+
+/* 10차: 컴백 — 이번 주 / 2주 전 나란히 2열, 박스 높이 행별로 맞춤 */
+.cbpair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px;row-gap:16px;margin-bottom:28px}
+.cbcol{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:16px;min-width:0}
+.cbbox{background:var(--sunk);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cbbox .ct{font-size:18px;margin:0}
+.cbbox .note{gap:10px 16px;font-size:15px;margin:0}
+.cbcol .tc{grid-template-columns:minmax(140px,1.3fr) 100px 90px repeat(2,minmax(80px,1fr))}
+.cbcol .db{grid-template-columns:110px minmax(0,1fr) 70px;font-size:15px;padding:4px 0}
+.cbcol .db .trk{height:30px}
+.cbcol .wf,.cbcol .wfh{grid-template-columns:110px repeat(6,minmax(0,1fr)) 40px;gap:5px;font-size:15px}
+.cbcol .wf{padding:3px 0}
+.cbcol .wf i{height:22px;border-radius:4px}
+.cbcol .wfh{font-size:12px}
+.cbcol>.tcwrap{display:flex;flex-direction:column}
+.cbcol>.tcwrap>div[id]{flex:1;display:flex;flex-direction:column}
+.cbcol>.tcwrap>div[id]>.tc{flex:1;align-items:center}
+@media (max-width:1040px){.cbpair{grid-template-columns:1fr}.cbcol{display:flex;flex-direction:column;gap:16px}.cbcol+.cbcol{margin-top:24px}}
+@media (max-width:760px){.cbcol .tc{grid-template-columns:1fr 1fr}.cbcol .tcn,.cbcol .tcp{grid-column:1/-1}.cbcol .db{grid-template-columns:76px minmax(0,1fr) 56px}.cbcol .wf,.cbcol .wfh{grid-template-columns:76px repeat(6,minmax(0,1fr)) 32px}}
+
+/* 11차: 초동 막대 — 팀 이름 1번, 전작/이번 작 배지로 구분 */
+.bars2{display:flex;flex-direction:column;gap:16px}
+.bgrp{display:flex;flex-direction:column;gap:6px}
+.bgn{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:.01em}
+.br2{display:grid;grid-template-columns:56px minmax(0,220px) minmax(0,1fr);gap:10px;align-items:center;font-size:13px}
+.bk{display:inline-flex;justify-content:center;align-items:center;height:22px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.bk.pv{background:var(--acc-tint2);color:var(--ink)}
+.bk.nw{background:var(--acc);color:var(--on-acc)}
+.bal{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.br2 .trk{display:flex;align-items:center;gap:8px;min-width:0}
+.br2 .fill{height:14px;border-radius:0 4px 4px 0}
+.br2:has(.pv) .fill{background:var(--acc-tint2)}
+.br2:has(.nw) .fill{background:var(--acc)}
+.br2 .num{font-size:13px;white-space:nowrap}
+.br2:has(.nw) .num{font-weight:800;color:var(--ink)}
+@media (max-width:560px){.br2{grid-template-columns:52px minmax(0,1fr);row-gap:4px}.bgrp{gap:12px}.br2 .trk{grid-column:1/-1}}
+@media (max-width:560px){.tab{padding:10px 12px;font-size:14px}.tab.on::after{left:12px;right:12px}.cv4{height:380px}.tile{border-right:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body><div class="w">
+
+<header class="hero">
+ <div class="hnav"><span class="htag">이번 주 K-POP 성적표 · 국내·글로벌·스트리밍 10개 차트</span><label class="hweek"><span>주차</span><select id="week" aria-label="주차 선택"></select></label></div>
+ <div class="hbody">
+  <svg class="hvinyl" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="59" fill="#161514"/><g fill="none" stroke="#33302c" stroke-width=".8"><circle cx="60" cy="60" r="53"/><circle cx="60" cy="60" r="48"/><circle cx="60" cy="60" r="43"/><circle cx="60" cy="60" r="38"/><circle cx="60" cy="60" r="33"/><circle cx="60" cy="60" r="28"/></g><path d="M20 40A44 44 0 0 1 44 16" stroke="rgba(255,255,255,.2)" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="60" cy="60" r="19" fill="#f4e7cf"/><text x="60" y="57" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="9" fill="#161514">k-pop</text><text x="60" y="67" text-anchor="middle" font-family="Pretendard,sans-serif" font-weight="700" font-size="5.5" fill="#161514">SIDE A · 33⅓</text><circle cx="60" cy="60" r="2.2" fill="#161514"/></svg>
+  <h1>k-pop<br>weekly</h1>
+ </div>
+</header>
+<nav class="tabs" id="tabs" role="tablist"></nav>
+<div class="player" aria-hidden="true"><span class="ctl">⏮</span><span class="ctl play">▶</span><span class="ctl">⏭</span><span class="np">NOW PLAYING</span><span class="wave" id="wave"></span></div>
+
+<section class="pg" id="p0">
+ <div class="ph"><h2>지금 차트에 누가 올라와 있나?<span class="ptag" id="t0"></span></h2><p>발매 시점과 관계없이 이번 주 차트 기준이에요. K-POP 팀 이름을 누르면 그 소속사 리포트로 이동해요.</p></div>
+ <div class="seg"><button data-grp="all">전체</button><button data-grp="dom">국내</button><button data-grp="glo">글로벌</button></div>
+ <div id="trend"></div>
+ <div id="chList"></div>
+ <div class="legend"><span><b style="color:var(--acc-ink);font-weight:500">파란 이름</b> = K-POP 아티스트</span><span>▲▼ 지난주 대비</span><span><span class="new">NEW</span> 신규 진입</span></div>
+</section>
+
+<section class="pg" id="p1">
+ <div class="ph"><h2>이번 주 새로 발매·데뷔한 팀들 성적은?<span class="ptag" id="t1"></span></h2><p>빌보드는 발매 약 2주 뒤 발표라 '2주 전 컴백' 표에서 확인해요.</p></div>
+ <div class="flt"><label for="agCb">엔터테인먼트 선택</label><select id="agCb"></select><span class="muted" style="font-size:13px">고른 회사 팀이 맨 위에 표시돼요</span></div>
+ <div id="cbSum"></div>
+ <div class="cbpair">
+  <div class="cbcol">
+   <div class="tcwrap"><div class="tchead"><h3>이번 주 컴백</h3><span>초기 반응 · 한터 초동</span><button class="go" id="toCmp">이 팀들 비교하기 →</button></div><div id="cbNow"></div></div>
+   <div class="cbbox"><div class="ct">이번 주 컴백 한눈에</div><dl class="note" id="cbIns"></dl></div>
+   <div class="cbbox"><div class="ct">전작 대비 초동<span>○ 전작 → ● 이번 작 · 만 장</span></div><div id="cbDb"></div></div>
+   <div class="cbbox"><div class="ct">해외 차트 진입<span>6개 차트 중</span></div><div id="cbWf"></div></div>
+  </div>
+  <div class="cbcol">
+   <div class="tcwrap"><div class="tchead"><h3>2주 전 컴백</h3><span>최종 성적 · 빌보드 포함</span></div><div id="cbOld"></div></div>
+   <div class="cbbox"><div class="ct">2주 전 컴백 한눈에</div><dl class="note" id="oldIns"></dl></div>
+   <div class="cbbox"><div class="ct">전작 대비 초동<span>○ 전작 → ● 이번 작 · 만 장</span></div><div id="cbDb2"></div></div>
+   <div class="cbbox"><div class="ct">해외 차트 진입<span>6개 차트 중 · 남미 = 멕시코·브라질·칠레·아르헨티나·페루 iTunes 최고</span></div><div id="cbWf2"></div></div>
+  </div>
+ </div>
+ <div class="legend"><span>상태 표시</span><span><span class="st s-pend">집계 전</span> 발매 직후라 아직 발표 전</span><span><span class="none">미진입</span> 차트를 확인했으나 없음</span><span><span class="st s-priv">비공개</span> 유료 등으로 확인 불가</span></div>
+</section>
+
+<section class="pg" id="p2">
+ <div class="ph"><h2>우리 회사 팀들은 어떤가?<span class="ptag" id="t2"></span></h2><p>처음엔 소속 아티스트 전체 현황, 팀 이름을 누르면 그 팀 세부 리포트가 나와요.</p></div>
+ <div class="agtop"><div class="flt agflt"><label for="ag">엔터테인먼트</label><select id="ag"></select></div><div class="agban" id="agHead"></div></div>
+ <div class="subt" id="agTabs"></div>
+ <div id="agBody" style="display:flex;flex-direction:column;gap:18px"></div>
+</section>
+
+<section class="pg" id="p3">
+ <div class="ph"><h2>팀들을 나란히 놓으면?<span class="ptag" id="t3"></span></h2><p>세 팀을 골라 나란히 봐요. 색은 팀 1 블루 · 팀 2 레드 · 팀 3 머스터드예요.</p></div>
+ <div class="pick" id="pick"></div>
+ <div class="g4">
+  <div class="c"><div class="ct">초동 비교<span>한터, 만 장</span></div><div class="cv"><canvas id="c1"></canvas></div><div class="foot">발매 첫 주 판매량 · 집계 전 팀은 막대 없음</div></div>
+  <div class="c"><div class="ct">전작 대비 성장률<span>%</span></div><div class="cv"><canvas id="c2"></canvas></div><div class="foot">막대 색 = 팀 · 0 아래로 내려가면 감소 · 데뷔작·집계 전은 막대 없음</div></div>
+  <div class="c"><div class="ct">발매 후 주차별 순위<span>써클</span></div><div class="cv"><canvas id="c3"></canvas></div><div class="foot">위로 갈수록 높은 순위 (맨 위 = 1위)</div></div>
+  <div class="c"><div class="ct">국가별 순위<span>색이 진할수록 높은 순위</span></div><div id="heat"></div><div class="foot">— = 미진입 · 남미 iTunes = 멕시코·브라질·칠레·아르헨티나·페루 중 최고 순위</div></div>
+ </div>
+ <h3>분포도 <span class="muted" style="font-weight:400;font-size:14px">국내 판매 vs 해외 진출 범위 (전체 팀)</span></h3>
+ <div class="c"><div class="cv4"><canvas id="c4"></canvas></div><div class="foot" style="margin-top:10px">가로 = 국내 초동 · 세로 = 해외 차트 진입 나라 수 (미국 빌보드 200 · 일본 오리콘 · 영국 UK 중) · 점 크기 = 누적 판매 규모 (써클 누적) · 점선 = 기준선 (초동 중앙값 · 2개국) · 집계 전 팀은 제외</div></div>
+</section>
+
+<p class="src">출처: 각 차트 칸의 링크 · 이번 주 차트는 공개 차트 실제 순위, 팀별 수치는 각 팀 최신 앨범의 한터·써클·빌보드·오리콘·UK 실제 값</p>
+</div>
+<script src="data/dashboard_now.js"></script>
+<script>
+const CT=['미국','일본','영국','멕시코','브라질','남미 iTunes'];
+const D_DEMO=[
+{n:'그룹 A',ag:'KQ',al:'앨범 A5',sale:150,prev:123,cum:270,rk:[1,3,8,15],c:[1,4,12,null,null,1],cb:'old'},
+{n:'그룹 E',ag:'KQ',al:'앨범 E3',sale:null,prev:32,cum:60,rk:[5,null,null,null],c:[null,'집계 전',null,null,null,18],cb:'now'},
+{n:'그룹 B',ag:'하이브',al:'앨범 B7',sale:120,prev:128,cum:240,rk:[2,4,6,12],c:[6,2,30,null,15,3],cb:'now'},
+{n:'그룹 F',ag:'하이브',al:'앨범 F2',sale:60,prev:52,cum:120,rk:[4,7,11,19],c:[18,9,null,25,null,null],cb:''},
+{n:'그룹 C',ag:'SM',al:'앨범 C4',sale:80,prev:59,cum:150,rk:[3,2,5,9],c:[25,7,null,null,null,null],cb:'now'},
+{n:'그룹 G',ag:'SM',al:'앨범 G6',sale:110,prev:115,cum:210,rk:[2,5,9,16],c:[45,6,null,null,null,'비공개'],cb:'old'},
+{n:'그룹 D',ag:'JYP',al:'앨범 D9',sale:95,prev:91,cum:180,rk:[4,6,10,20],c:[40,12,null,null,null,null],cb:''},
+{n:'그룹 H',ag:'JYP',al:'앨범 H1',sale:45,prev:null,cum:90,rk:[6,8,12,22],c:[30,null,40,8,12,5],cb:'now'},
+{n:'그룹 I',ag:'YG',al:'앨범 I2',sale:70,prev:66,cum:130,rk:[3,6,13,21],c:[22,15,35,20,null,2],cb:''},
+{n:'그룹 J',ag:'큐브',al:'앨범 J8',sale:40,prev:44,cum:80,rk:[7,11,20,35],c:[60,20,null,30,null,null],cb:''},
+{n:'그룹 K',ag:'더뮤즈',al:'앨범 K3',sale:15,prev:11,cum:30,rk:[9,14,25,null],c:[null,null,null,null,null,null],cb:'now'},
+{n:'그룹 L',ag:'더블랙레이블',al:'앨범 L1',sale:30,prev:null,cum:55,rk:[8,10,18,30],c:[35,null,50,22,null,4],cb:''}];
+// 팀별 실제 데이터(data/dashboard_now.js의 D_REAL)가 있으면 그걸 쓰고, 없으면 가상 D_DEMO
+const D=(typeof D_REAL!=='undefined'&&D_REAL.length)?D_REAL:D_DEMO;
+const CH=[
+ {t:'한터 주간 앨범',grp:'dom',wk:'11/2~11/8',u:'https://www.hanteochart.com/',l:['그룹 B','그룹 C','그룹 A','그룹 G','그룹 D','그룹 I','그룹 F','그룹 H','그룹 E','그룹 J']},
+ {t:'써클 주간 앨범',grp:'dom',wk:'11/1~11/7',u:'https://circlechart.kr/page_chart/album.circle',l:['그룹 C','그룹 B','그룹 A','그룹 D','그룹 G','그룹 F','그룹 I','그룹 H','그룹 J','그룹 E']},
+ {t:'멜론 주간 TOP100',grp:'dom',wk:'11/2~11/8',u:'https://www.melon.com/chart/week/index.htm',l:['그룹 C','솔로 가수 1','그룹 B','그룹 L','그룹 I','솔로 가수 2','그룹 H','그룹 A','그룹 K','그룹 F']},
+ {t:'빌보드 200',grp:'glo',wk:'11/14 차트',u:'https://www.billboard.com/charts/billboard-200/',l:['해외 가수 1','해외 가수 2','그룹 A','해외 가수 3','해외 가수 4','그룹 B','해외 가수 5','해외 가수 6','해외 가수 7','해외 가수 8']},
+ {t:'빌보드 Hot 100',grp:'glo',wk:'11/14 차트',u:'https://www.billboard.com/charts/hot-100/',l:['해외 가수 1','해외 가수 3','해외 가수 2','해외 가수 4','해외 가수 5','해외 가수 6','해외 가수 7','해외 가수 8','그룹 B','해외 가수 9']},
+ {t:'오리콘 주간 앨범',grp:'glo',wk:'11/10 발표',u:'https://www.oricon.co.jp/rank/ja/w/',l:['일본 가수 1','그룹 B','일본 가수 2','그룹 A','일본 가수 3','그룹 G','그룹 C','일본 가수 4','일본 가수 5','일본 가수 6']},
+ {t:'UK 앨범 차트',grp:'glo',wk:'11/13 차트',u:'https://www.officialcharts.com/charts/albums-chart/',l:['영국 가수 1','영국 가수 2','해외 가수 1','영국 가수 3','해외 가수 2','영국 가수 4','그룹 A','영국 가수 5','해외 가수 3','영국 가수 6']},
+ {t:'Spotify 글로벌 주간',grp:'glo',wk:'~11/5',u:'https://charts.spotify.com/charts/view/regional-global-weekly/latest',l:['해외 가수 1','해외 가수 2','해외 가수 3','그룹 B','해외 가수 4','해외 가수 5','해외 가수 6','그룹 I','해외 가수 7','해외 가수 8']},
+ {t:'Apple Music 글로벌 Top 100',grp:'glo',wk:'11/7 기준',u:'https://music.apple.com/',l:['해외 가수 1','해외 가수 3','해외 가수 2','해외 가수 4','그룹 B','해외 가수 5','그룹 A','해외 가수 6','해외 가수 7','해외 가수 8']},
+ {t:'YouTube 글로벌 곡',grp:'glo',wk:'10/31~11/6',u:'https://charts.youtube.com/charts/TopSongs/global/weekly',l:['해외 가수 1','그룹 B','해외 가수 2','해외 가수 3','그룹 A','해외 가수 4','그룹 H','그룹 C','해외 가수 5','해외 가수 6']}];
+const T=n=>D.find(d=>d.n===n);
+const isK=n=>!!T(n)||n.startsWith('솔로');
+const TABS=[['이번 주 차트 현황',1],['주간 컴백 리포트',D===D_DEMO?0:1],['소속사 리포트',1],['아티스트 비교',D===D_DEMO?0:1]];
+let tab=0,agSub='all',sel=(['ATEEZ','Stray Kids','BTS'].every(n=>D.some(d=>d.n===n))?['ATEEZ','Stray Kids','BTS']:D.filter(d=>d.sale!=null).slice(0,3).map(d=>d.n)),ch=[],grp='all';
+const $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
+// 🏠 탭: data/dashboard_now.js(실제 데이터)가 있으면 그걸 쓰고, 없으면 가상 CH
+const REAL=typeof CH_REAL!=='undefined';
+const CHS=REAL?CH_REAL:CH;
+const ag=$('ag');[...new Set([...D.map(d=>d.ag),...(REAL?CH_REAL.flatMap(c=>c.l.map(r=>r.g)).filter(Boolean):[])])].forEach(v=>ag.add(new Option(v,v)));ag.value='KQ';
+const AGS=new Set(D.map(d=>d.ag));
+REAL&&CH_REAL.forEach(c=>c.l.forEach(r=>r.g&&AGS.add(r.g)));
+// 플랫폼 표시: 공식 색 + 글자 로고 (A안). 한터·써클·UK는 공식 사이트 색에서 확인, 오리콘은 확인 전이라 중립색
+// 로고: assets/logos (위키미디어 공용 · 공식 사이트에서 받은 파일). 파일이 없으면 색 글자 로고로 대신 표시
+const LG='assets/logos/',LGV='?v=6';
+const PLAT=[[/^한터/,'ic-hanteo.png'],[/^써클/,'ic-circle.png'],[/^멜론/,'ic-melon.png'],[/^빌보드/,'ic-billboard.png'],
+ [/^오리콘/,'ic-oricon.png'],[/^UK/,'ic-officialcharts.png'],[/^Spotify/,'ic-spotify.svg'],[/^Apple/,'ic-applemusic.png'],[/^YouTube/,'ic-youtube.png']];
+const plat=t=>{const m=PLAT.find(([r])=>r.test(t));return {f:m?m[1]:''}};
+// 소속사 로고 (g 또는 a 값 기준)
+const AGL={'하이브':'ag-hybe.svg','빅히트':'ag-bighit.svg','빌리프랩':'ag-belift.png','KOZ':'ag-koz.png','SM':'ag-sm.svg','JYP':'ag-jyp.svg','YG':'ag-yg.svg','KQ':'ag-kq.png','스타쉽':'ag-starship.svg','큐브':'ag-cube.svg','더블랙레이블':'ag-theblacklabel.svg','YH':'ag-yh.png','LLOUD':'ag-lloud.svg','더뮤즈':'ag-themuze.png','A2O':'ag-a2o.png','OA':'ag-oa.png','스트레인지랩':'ag-strangelab.png'};
+// 아티스트 로고 (영문 공식명 소문자 기준)
+const ARL={'ive':'ar-ive.svg','illit':'ar-illit.svg','cortis':'ar-cortis.svg','bts':'ar-bts.png','nmixx':'ar-nmixx.svg','stray kids':'ar-straykids.svg','boynextdoor':'ar-boynextdoor.png','ateez':'ar-ateez.png','xikers':'ar-xikers.png','cravity':'ar-cravity.png','seventeen':'ar-seventeen.png','jxj (seventeen)':'ar-seventeen.png','tomorrow x together':'ar-txt.png','enhypen':'ar-enhypen.png','le sserafim':'ar-lesserafim.png','twice':'ar-twice.png','itzy':'ar-itzy.png','meovv':'ar-meovv.png','allday project':'ar-alldayproject.png','a2o lite':'ar-a2olite.png','xlov':'ar-xlov.png','aespa':'ar-aespa.png','nct dream':'ar-nctdream.png','riize':'ar-riize.png','blackpink':'ar-blackpink.png','babymonster':'ar-babymonster.png','i-dle':'ar-idle.png'};
+const img=(f,alt,cls='')=>f?`<img class="${cls}" src="${LG}${f}${LGV}" alt="${esc(alt)}" onerror="this.remove()">`:'';
+const plHtml=t=>{const p=plat(t);return p.f?`<span class="pl" aria-hidden="true"><img src="${LG}${p.f}${LGV}" alt="" onerror="this.remove()"></span>`:''};
+const arLogo=n=>img(ARL[String(n).toLowerCase()],n+' 로고','alg');
+const secOf=c=>c.grp==='dom'?'dom':(c.type?c.type==='stream':/^(Spotify|Apple|YouTube)/.test(c.t))?'str':'glo';
+const SECS=[['dom','국내 차트','앨범 판매 · 음원',3],['glo','글로벌 공식 차트','미국 · 일본 · 영국',4],['str','스트리밍 플랫폼','글로벌 재생',3]];
+// 소속사 컬러: 레퍼런스(공식 로고 색) 받으면 채움. 없으면 기본 보라
+const AGC={'JYP':'#2e8fd0','스타쉽':'#e0582f','큐브':'#1f63c6'};
+const applyAg=()=>{};
+const dn=r=>r.en||r.n;
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const rdl=(r,i)=>{const p=r.p;if(p==='NEW')return '<span class="new">NEW</span>';if(!/^\d+$/.test(p))return '';const v=+p-(i+1);return v>0?`<span class="up">▲${v}</span>`:v<0?`<span class="dn">▼${-v}</span>`:'<span class="flat">–</span>'};
+function rrow(r,i){const link=r.g&&AGS.has(r.g);
+ const tip=[dn(r),r.s,r.a?`소속사 ${r.a}${r.src?' (근거: '+r.src+')':''}`:'',r.v].filter(Boolean).join(' · ');
+ return `<li class="${r.k?'kp':'fx'}"${link?` data-ag="${esc(r.g)}"`:''} title="${esc(tip)}"><span class="no">${i+1}</span><span class="nm"><span class="sg">${esc(r.s)}</span><span class="ar"><b>${esc(dn(r))}</b>${r.a?` <em>· ${esc(r.a)}</em>`:''}</span></span><span class="dl">${rdl(r,i)}</span></li>`}
+let cbAg='';
+const me=n=>!!cbAg&&T(n)&&T(n).ag===cbAg;
+const num=v=>typeof v==='number';
+const ST={'집계 전':'s-pend','비공개':'s-priv'};
+const st=s=>`<span class="st ${ST[s]||'s-pend'}">${s}</span>`;
+const NONE='<span class="none">미진입</span>';
+// 성장률은 반올림 전 원래 판매량(sr·pr)으로 계산 (예: (1,885,712 − 1,544,168) ÷ 1,544,168 = 22.1%)
+const gr=d=>{const a=d.sr??d.sale,b=d.pr??d.prev;return b&&a!=null?Math.round((a-b)/b*1000)/10:null};
+// sst = 초동이 숫자가 아닐 때의 상태 (집계 전 / 실물 앨범 없음 등)
+const sstOf=d=>d.sst||'집계 전';
+const grTxt=d=>{if(d.sale==null)return st(sstOf(d));const g=gr(d);return g==null?'<span class="muted">데뷔작</span>':`<span class="${g<0?'dn':'up'}">${g<0?'▼':'▲'} ${Math.abs(g)}%</span>`};
+const sstMsg=d=>({'집계 전':'발매 직후라 아직 발표 전','실물 앨범 없음':'디지털 발매라 초동 집계 대상 아님','확인 불가':'한터 초동 기록을 찾지 못함'})[sstOf(d)]||esc(sstOf(d));
+const saleTxt=d=>d.sale==null?st(sstOf(d)):d.sale+'만';
+const cell=v=>num(v)?v+'위':v?st(v):NONE;
+const tag=n=>T(n)?`<span class="nmx" data-ag="${T(n).ag}">${n}</span><span class="agx">${T(n).ag}</span>`:`<span class="nmx">${n}</span>`;
+const best=d=>{const v=d.c.map((r,i)=>[r,CT[i]]).filter(x=>num(x[0]));return v.length?v.sort((a,b)=>a[0]-b[0]).slice(0,2).map(x=>`${x[1]} ${x[0]}위`).join(' · '):d.c.some(x=>x==='집계 전')?st('집계 전'):'해외 미진입'};
+// 해외 진입 나라 수: 실제 데이터는 전 팀 공통으로 모은 미국·일본·영국 3개국 기준 (남미는 KQ만 수집)
+const ovN=d=>(D===D_DEMO?d.c:d.c.slice(0,3)).filter(num).length;
+const rad=d=>D===D_DEMO?d.cum/14:3+Math.sqrt(d.cum||0)*1.1;
+const DL=[0,2,-1,'N',3,-2,0,5,'N',-4];
+const dl=(t,i)=>{const v=DL[(i+t.length)%10];return v==='N'?'<span class="new">NEW</span>':v>0?`<span class="up">▲${v}</span>`:v<0?`<span class="dn">▼${-v}</span>`:'<span class="flat">–</span>'};
+function row(n,i,c){const a=T(n);
+ return `<li class="${a||isK(n)?'kp':'fx'}"${a?` data-ag="${a.ag}"`:''}><span class="no">${i+1}</span><span class="nm"><span class="ar"><b>${n}</b>${a?` <em>· ${a.ag}</em>`:''}</span></span><span class="dl">${dl(c.t,i)}</span></li>`}
+function card(c){return `<div class="chc"><div class="chh">${plHtml(c.t)}<div class="t">${c.t}</div><div class="meta"${c.wkFull?` title="${esc(c.wkFull)} · 확인 ${c.checked}"`:''}>${c.wk} · ${c.u?`<a href="${c.u}" target="_blank" rel="noopener">출처</a>`:'출처 없음'}</div></div><ul class="rk">${c.l.map((n,i)=>typeof n==='string'?row(n,i,c):rrow(n,i)).join('')}</ul></div>`}
+// 컴백 팀 카드: 팀 · 앨범 | 초동(크게) | 전작 대비 | 차트 성적. 집계 전 팀은 한 줄로 줄임. 모든 팀이 같은 값인 차트 칸은 숨기고 아래에 한 줄로
+function cbCards(list,old){
+ const cols=old?[['빌보드 200',d=>d.c[0]],['빌보드 Hot 100',d=>d.hot]]:[['오리콘',d=>d.c[1]],['해외 최고',d=>null]];
+ const same=[];const show=cols.filter(([t,f])=>{if(t==='해외 최고')return true;const v=list.map(f);const allNone=v.every(x=>!num(x));if(allNone){const u=[...new Set(v.map(x=>x==null?(t.includes('Hot')?'미수집':'미진입'):x))];same.push(u.length===1?`${t}: ${list.length}팀 모두 ${u[0]}`:`${t}: 순위에 든 팀 없음 (${u.join(' · ')})`)}return !allNone});
+ const rows=list.map(d=>{const nm=`<div class="tcn"><span class="nmx" data-ag="${d.ag}">${d.n}</span><span class="agx">${d.ag}</span><div class="tca">${d.al}</div></div>`;
+  if(d.sale==null)return `<div class="tc ${me(d.n)?'me':''}">${nm}<div class="tcp">${st(sstOf(d))} <span class="muted">${sstOf(d)==='집계 전'?'발매 직후라 아직 발표 전':''}</span></div></div>`;
+  return `<div class="tc ${me(d.n)?'me':''}">${nm}<div class="tcv"><b class="num">${d.sale}만</b><small>초동</small></div><div class="tcg">${grTxt(d)}<small>${gr(d)==null?'':'전작 대비'}</small></div>${show.map(([t,f])=>`<div class="tcx"><small>${t}</small><span>${t==='해외 최고'?best(d):cell(f(d))}</span></div>`).join('')}</div>`}).join('');
+ return rows+(same.length?`<p class="tcnote">${same.join(' · ')}</p>`:'')}
+function draw(){
+ $('tabs').innerHTML=TABS.map(([t],i)=>`<button class="tab ${i===tab?'on':''}" role="tab" aria-selected="${i===tab}" data-i="${i}"><span class="tlong">${t}</span><span class="tshort">${['차트','컴백','소속사','비교'][i]}</span></button>`).join('');
+ TABS.forEach(([,r],i)=>$('t'+i).textContent=r?'발표: 실제 데이터':'구조 예시');
+ document.querySelectorAll('.pg').forEach((p,i)=>p.classList.toggle('on',i===tab));document.body.dataset.pg=tab;
+ ch.forEach(c=>c.destroy());ch=[];applyAg();
+ if(tab===0){document.querySelectorAll('[data-grp]').forEach(b=>b.classList.toggle('on',b.dataset.grp===grp));
+  const L=CHS.filter(c=>grp==='all'||c.grp===grp);
+  $('chList').innerHTML=SECS.filter(([k])=>L.some(c=>secOf(c)===k)).map(([k,h,sub,n])=>`<div class="sec"><div class="sech"><span class="tk">ADMIT ONE<b>${h}</b><i>No. ${String(L.filter(c=>secOf(c)===k).length).padStart(2,'0')}</i></span><span>${sub} · ${L.filter(c=>secOf(c)===k).length}개 차트</span></div><div class="g${n}">${L.filter(c=>secOf(c)===k).map(card).join('')}</div></div>`).join('');
+  const lb={all:'전체',dom:'국내',glo:'글로벌'}[grp];
+  if(REAL){const R=L.flatMap(c=>c.l.map(r=>({...r,t:c.t}))),K=R.filter(r=>r.k);
+   const cnt={};K.forEach(r=>{(cnt[r.key]=cnt[r.key]||{n:dn(r),a:r.a,c:new Set()}).c.add(r.t)});
+   const top=Object.values(cnt).sort((a,b)=>b.c.size-a.c.size)[0];
+   const NEW=[...new Map(K.filter(r=>r.p==='NEW').map(r=>[r.key+r.t,`${dn(r)} (${r.t})`])).values()];
+   const NT={};K.filter(r=>r.p==='NEW').forEach(r=>{(NT[r.key]=NT[r.key]||{n:dn(r),c:new Set()}).c.add(r.t)});
+   const NTL=Object.values(NT).sort((a,b)=>b.c.size-a.c.size);
+   $('trend').innerHTML=`<div class="tiles">
+   <div class="tile"><div class="lb">${lb} 차트 K-POP 진입</div><div class="v num">${K.length}<small>/ ${R.length}자리</small></div><div class="s">${L.length}개 차트 Top 10 기준</div></div>
+   <div class="tile"><div class="lb">가장 많은 차트에 오른 팀</div><div class="v">${top?esc(top.en||top.n):'없음'}${top&&top.a?`<small>${esc(top.a)}</small>`:''}</div><div class="s" title="${top?esc([...top.c].join(', ')):''}">${top?`${L.length}개 차트 중 ${top.c.size}개`:''}</div></div>
+   <div class="tile"><div class="lb">K-POP 신규 진입 <span class="new">NEW</span></div><div class="v num">${NEW.length}<small>건</small></div>${NEW.length?`<details class="more"><summary>전체 ${NEW.length}건 보기</summary><p>${esc(NEW.join(', '))}</p></details>`:''}</div></div>`;return}
+  const k=L.reduce((s,c)=>s+c.l.filter(isK).length,0);
+  const NEW=L.flatMap(c=>c.l.map((n,i)=>DL[(i+c.t.length)%10]==='N'&&isK(n)?`${n} (${c.t})`:null)).filter(Boolean);
+  const multi=D.map(d=>[d.n,L.filter(c=>c.l.includes(d.n)).length]).sort((a,b)=>b[1]-a[1])[0];
+  $('trend').innerHTML=`<div class="tiles">
+   <div class="tile"><div class="lb">${lb} 차트 K-POP 진입</div><div class="v num">${k}<small>/ ${L.length*10}자리</small></div><div class="s">${L.length}개 차트 Top 10 기준 · 순위표에서 자동 계산</div></div>
+   <div class="tile"><div class="lb">가장 많은 차트에 오른 팀</div><div class="v">${multi[0]}<small>${T(multi[0]).ag}</small></div><div class="s">${L.length}개 차트 중 ${multi[1]}개</div></div>
+   <div class="tile"><div class="lb">K-POP 신규 진입 <span class="new">NEW</span></div><div class="v num">${NEW.length}<small>건</small></div><div class="s">${NEW.join(', ')||'없음'}</div></div></div>`}
+ if(tab===1){const cs=$('agCb');if(!cs.options.length){cs.add(new Option('전체 (강조 없음)',''));[...new Set(D.map(d=>d.ag))].forEach(v=>cs.add(new Option(v,v)))}cs.value=cbAg;const now=D.filter(d=>d.cb==='now'),old=D.filter(d=>d.cb==='old');
+  now.sort((a,b)=>me(b.n)-me(a.n));$('cbNow').innerHTML=cbCards(now,false);$('cbOld').innerHTML=cbCards(old,true);
+  const top1=[...now].filter(d=>d.sale!=null).sort((a,b)=>b.sale-a.sale)[0],ups=now.filter(d=>(gr(d)??0)>0).length,dns=now.filter(d=>gr(d)!=null&&gr(d)<0).length;
+  $('cbSum').innerHTML=`<div class="tiles"><div class="tile"><div class="lb">이번 주 컴백</div><div class="v num">${now.length}<small>팀</small></div><div class="s">${now.filter(d=>d.sale==null).length}팀 집계 전</div></div>
+   <div class="tile"><div class="lb">초동 1위</div><div class="v">${top1?top1.n:'—'}${top1?`<small>${top1.sale}만</small>`:''}</div><div class="s">${top1?top1.ag:'집계된 팀 없음'}</div></div>
+   <div class="tile"><div class="lb">전작 대비</div><div class="v num">${ups}<small>팀 성장</small> ${dns}<small>팀 감소</small></div><div class="s">전작이 있는 팀 기준</div></div></div>`;
+  const P=[...now,...old],mx=Math.max(...P.flatMap(d=>[d.sale||0,d.prev||0]))*1.06,pct=v=>(v/mx*100).toFixed(1)+'%';
+  const up=now.filter(d=>(gr(d)??0)>0).length,down=now.filter(d=>gr(d)!=null&&gr(d)<0).length,pend=now.filter(d=>d.sale==null).length;
+  const bg=now.filter(d=>gr(d)!=null).sort((a,b)=>gr(b)-gr(a))[0];
+  const nov=now.filter(d=>d.c.some(num));
+  $('cbIns').innerHTML=now.length?`<dt>성장</dt><dd>${bg&&gr(bg)>0?`최고 ${bg.n} ▲ ${gr(bg)}%`:`성장한 팀 없음${bg?` · ${bg.n} ▼ ${Math.abs(gr(bg))}%`:''}`}</dd>
+   <dt>해외</dt><dd>${nov.length?`${nov.length}팀 해외 차트 진입 · ${nov.map(d=>d.n).join(', ')}`:'아직 해외 차트 진입 없음'}</dd>
+   <dt>빌보드</dt><dd>발매 약 2주 뒤 발표 · 다음 주 확인</dd>`:'<dd>이번 주 컴백 팀이 없어요</dd>';
+  const dbr=d=>{const g=gr(d),col=g==null?'var(--ink2)':g<0?'var(--dn)':'var(--up)';
+   if(d.sale==null)return `<div class="db"><span>${d.n}</span><div class="trk">${d.prev!=null?`<span class="pt pv" style="left:${pct(d.prev)}" title="전작 ${d.prev}만"></span>`:''}</div><span class="gv">${st(sstOf(d))}</span></div>`;
+   const a=Math.min(d.sale,d.prev??d.sale),b=Math.max(d.sale,d.prev??d.sale);
+   return `<div class="db" title="${d.n}: 전작 ${d.prev??'—'}만 → 이번 작 ${d.sale}만"><span>${d.n}</span><div class="trk">${d.prev!=null?`<span class="ln" style="left:${pct(a)};width:${((b-a)/mx*100).toFixed(1)}%;background:${col}"></span><span class="pt pv" style="left:${pct(d.prev)}"></span>`:''}<span class="pt" style="left:${pct(d.sale)};background:${col}"></span></div><span class="gv">${g==null?'<span class="muted">데뷔작</span>':`<span class="${g<0?'dn':'up'}">${g>0?'+':''}${g}%</span>`}</span></div>`};
+  $('cbDb').innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${now.map(dbr).join('')}</div>`;$('cbDb2').innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${old.map(dbr).join('')}</div>`;
+  const ov6=d=>d.c.filter(num).length,wt=[...P].sort((a,b)=>ov6(b)-ov6(a))[0];
+  const og=old.filter(d=>gr(d)!=null),avg=og.length?Math.round(og.reduce((a,d)=>a+gr(d),0)/og.length*10)/10:null,ob=[...og].sort((a,b)=>gr(b)-gr(a))[0],otop=[...old].filter(d=>d.sale!=null).sort((a,b)=>b.sale-a.sale)[0],b200=old.filter(d=>num(d.c[0])).length;
+  $('oldIns').innerHTML=old.length?`<dt>성장</dt><dd>${og.filter(d=>gr(d)>0).length}/${og.length}팀 전작보다 성장${avg!=null?` · 평균 ${avg>0?'+':''}${avg}%`:''}${ob?` · 최고 ${ob.n} ${gr(ob)>0?'+':''}${gr(ob)}%`:''}</dd>
+   <dt>초동</dt><dd>${otop?`1위 ${otop.n} ${otop.sale}만`:'집계된 팀 없음'}</dd>
+   <dt>빌보드</dt><dd>빌보드 200 진입 ${b200}팀${b200?'':' · 미국 진입은 아직 없음'}</dd>`:'<dd>2주 전 컴백 팀이 없어요</dd>';
+  
+  const wfh=L2=>`<div style="display:flex;flex-direction:column;gap:4px"><div class="wfh"><span></span>${['미국','일본','영국','멕시코','브라질','남미'].map(x=>`<span>${x}</span>`).join('')}<span></span></div>${L2.map(d=>`<div class="wf"><span>${d.n}</span>${d.c.map((v,i)=>`<i class="${num(v)?'on':''}" title="${d.n} · ${CT[i]} ${num(v)?v+'위':v||'미진입'}"></i>`).join('')}<b>${ov6(d)}/6</b></div>`).join('')}</div>`;
+  $('cbWf').innerHTML=wfh(now);$('cbWf2').innerHTML=wfh(old);}
+ if(tab===2){const L=D.filter(d=>d.ag===ag.value);
+  if(agSub!=='all'&&!L.some(d=>d.n===agSub))agSub='all';
+  const RR=REAL?CH_REAL.flatMap(c=>c.l.map((r,i)=>({...r,t:c.t,i}))).filter(r=>r.g===ag.value):[];
+  $('agHead').innerHTML=`${AGL[ag.value]?`<span class="agmk" title="${esc(ag.value)}">${img(AGL[ag.value],ag.value+' 로고')}</span>`:`<div class="nm">${esc(ag.value)}</div>`}<div class="sub">소속 ${L.length}팀 · 이번 주 차트 진입 ${RR.length}건</div>`;
+  $('agTabs').innerHTML=L.length>1?[['all','전체 아티스트'],...L.map(d=>[d.n,d.n])].map(([k,t])=>`<button data-sub="${k}" class="${agSub===k?'on':''}">${t}</button>`).join(''):'';
+  const realList=RR.length?`<div class="c"><div class="ct">이번 주 차트 진입<span>차트 현황 탭 기준</span></div>${(li=>`<ul class="rl">${RR.slice(0,6).map(li).join('')}</ul>${RR.length>6?`<details class="rlmore"><summary>나머지 ${RR.length-6}건 더 보기</summary><ul class="rl">${RR.slice(6).map(li).join('')}</ul></details>`:''}`)(r=>`<li><span><b>${esc(dn(r))}</b> <span class="muted">${esc(r.a)}</span><span class="sg">${esc(r.s)}</span></span><span class="num">${esc(r.t)} ${r.i+1}위 ${rdl(r,r.i)}</span></li>`)}</div>`:'';
+  const brow=(k,al,v,mx,ss='집계 전')=>`<div class="br2"><span class="bk ${k}">${k==='pv'?'전작':'이번 작'}</span><span class="bal" title="${esc(al||'')}">${esc(al||'—')}</span><div class="trk">${v==null?st(ss):`<div class="fill" style="width:${v/mx*80}%"></div><span class="num">${v}만</span>`}</div></div>`;
+  const bpair=(d,mx,nm)=>`<div class="bgrp">${nm?`<div class="bgn">${esc(d.n)}</div>`:''}${d.prev!=null?brow('pv',d.pal,d.prev,mx):''}${brow('nw',d.al,d.sale,mx,sstOf(d))}</div>`;
+  let h='';
+  if(!L.length){h=`<div class="empty">이번 주 ${esc(ag.value)} 소속 팀의 초동·국가별 데이터는 아직 없어요. 아래는 차트 현황 탭에 잡힌 진입 기록이에요.</div>`+realList}
+  else if(agSub==='all'){const tot=Math.round(L.reduce((s,d)=>s+(d.sale||0),0)*10)/10,pend=L.filter(d=>d.sale==null).length,top=[...L].sort((a,b)=>(gr(b)??-99)-(gr(a)??-99))[0];
+   const mx=Math.max(...L.flatMap(d=>[d.sale||0,d.prev||0]));
+   h=`<div class="agcols"><div class="agl"><div class="kpi">${L.map(d=>`<div class="tile" data-sub="${d.n}"><div class="lb">${d.n} 초동 · ${d.al}</div><div class="v num">${saleTxt(d)}</div><div class="s">${d.sale==null?sstMsg(d):grTxt(d)+(gr(d)==null?'':' 전작 대비')}</div><div class="go2">세부 보기 →</div></div>`).join('')}
+    ${L.length<2?'':`<div class="tile"><div class="lb">소속사 합계 초동</div><div class="v num">${pend===L.length?st([...new Set(L.map(sstOf))].length===1?sstOf(L[0]):'집계 전'):tot+'만'}</div><div class="s">${pend===L.length?(L.every(d=>sstOf(d)==='실물 앨범 없음')?'실물 앨범이 없어 합산할 초동이 없어요':'합산할 초동이 아직 없어요'):pend?`${pend}팀 제외 (${[...new Set(L.filter(d=>d.sale==null).map(sstOf))].join(' · ')})`:L.length+'팀 합'}</div></div>`}</div>
+   <h3>초동 추이 <span class="muted" style="font-weight:400;font-size:14px">한터 · 만 장</span></h3><div class="c bars2">${(S=>S.slice(0,6).map(d=>bpair(d,mx,true)).join('')+(S.length>6?`<details class="rlmore bmore"><summary><span class="so">전체 ${S.length}팀 보기</span><span class="sc">상위 6팀만 보기</span></summary><div class="bars2">${S.slice(6).map(d=>bpair(d,mx,true)).join('')}</div></details>`:''))(L.length>6?[...L].sort((a,b)=>(b.sale??-1)-(a.sale??-1)):L)}</div>${L.length===1?realList:''}
+   </div><aside class="agr"><div class="c"><div class="ct">주목할 점</div><dl class="note">${(()=>{const g=L.filter(d=>gr(d)!=null),gt=[...g].sort((a,b)=>gr(b)-gr(a))[0],ov=L.filter(d=>d.c.some(num));
+     return `<dt>성장</dt><dd>${gt?(gr(gt)>0?`${gt.n} 전작 대비 ▲ ${gr(gt)}%${L.length>1?'로 소속사 내 1위':''}`:`전작보다 성장한 팀 없음 (${gt.n} ▼ ${Math.abs(gr(gt))}%)`):L.every(d=>d.sale==null&&sstOf(d)!=='집계 전')?'초동 기록이 없어 비교할 수 없음':'아직 집계 전이라 비교 전'}</dd>
+     <dt>해외</dt><dd>${ov.length?[...ov].sort((a,b)=>b.c.filter(num).length-a.c.filter(num).length).slice(0,3).map(d=>`${d.n} ${best(d)}`).join(' / ')+(ov.length>3?` <span class="muted">외 ${ov.length-3}팀</span>`:''):'아직 해외 차트 진입 기록 없음'}</dd>
+     <dt>제안</dt><dd>${(()=>{/* 인사이트는 데이터(build_dashboard_data.py add_insights)에서 팀별로 만듦. 화면엔 짧은 txt, 마우스를 올리면 긴 설명 */const I=L.filter(d=>d.ins&&d.ins.length).sort((a,b)=>a.ins[0].p-b.ins[0].p||(b.sale||0)-(a.sale||0));
+      const ln=(x,nm)=>`<span title="${esc(x.obs+' → '+x.sug)}">${nm?`<b>${esc(nm)}</b> `:''}${esc(x.txt)}</span>`;
+      return !I.length?'아직 집계 전이라 제안할 근거가 부족해요':L.length>1?I.slice(0,2).map(d=>ln(d.ins[0],d.n)).join('<br>'):I[0].ins.slice(0,2).map(x=>ln(x)).join('<br>')})()}</dd>`})()}</dl></div><div class="c"><div class="ct">국가별 차트</div><div class="tw"><table class="ctab"><thead><tr><th>팀</th>${CT.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${L.map(d=>`<tr><td><span class="nmx">${d.n}</span></td>${d.c.map(v=>`<td>${cell(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>${L.length>1?realList:''}</aside></div>`}
+  else{const d=T(agSub),hc=v=>v<=5?['var(--h1)','#fff']:v<=20?['var(--h2)','#fff']:['var(--h3)','var(--h3-ink)'],mx=Math.max(d.sale||0,d.prev||0);
+   h=`<div class="kpi"><div class="tile"><div class="lb">초동 · ${d.al}</div><div class="v num">${saleTxt(d)}</div><div class="s">${d.sale==null?sstMsg(d):grTxt(d)+(gr(d)==null?'':' 전작 대비')}</div></div>
+    <div class="tile"><div class="lb">전작 초동</div><div class="v num">${d.prev!=null?d.prev+'만':'<span class="muted">데뷔작</span>'}</div><div class="s">한터 기준</div></div>
+    <div class="tile"><div class="lb">누적 판매</div><div class="v num">${d.cum}만</div><div class="s">써클 누적</div></div>
+    <div class="tile"><div class="lb">해외 차트 진입</div><div class="v num">${d.c.filter(num).length}<small>/ 6개</small></div><div class="s">${best(d)}</div></div></div>
+   <div class="g2c"><div class="c" style="display:flex;flex-direction:column;gap:10px"><div class="ct">초동 비교<span>한터 · 만 장</span></div><div class="bars2">${bpair(d,mx,false)}</div>
+     <div class="ct" style="margin-top:8px">국가별 순위<span>색이 진할수록 높은 순위</span></div><div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px">${d.c.map((v,i)=>`<div style="text-align:center;font-size:12px;color:var(--muted)">${CT[i]}<div style="margin-top:4px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;${num(v)?`background:${hc(v)[0]};color:${hc(v)[1]}`:'background:var(--sunk)'}">${num(v)?v:v?st(v):'—'}</div></div>`).join('')}</div></div>
+    <div class="c" style="display:flex;flex-direction:column;gap:10px"><div class="ct">발매 후 주차별 순위<span>써클</span></div><div class="cv"><canvas id="cA"></canvas></div><div class="foot">위로 갈수록 높은 순위 (맨 위 = 1위)</div></div></div>`}
+  $('agBody').innerHTML=h;
+  if(agSub!=='all'&&L.length){const d=T(agSub),muted=css('--muted'),line=css('--line'),line2=css('--line2'),surf=css('--surface'),acc=css('--acc')||'#5b4bd1';
+   Chart.defaults.font.family=css('--font');Chart.defaults.font.size=13;Chart.defaults.color=css('--ink2');const ax={grid:{color:line},border:{color:line2},ticks:{color:muted}};
+   ch.push(new Chart($('cA'),{type:'line',data:{labels:['1주','2주','3주','4주'],datasets:[{label:d.n,data:d.rk,borderColor:acc,backgroundColor:acc,borderWidth:2,pointRadius:5,pointBorderColor:surf,pointBorderWidth:2,tension:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:css('--ink'),titleColor:surf,bodyColor:surf,callbacks:{label:c=>c.raw==null?'차트 밖':c.raw+'위'}}},scales:{x:ax,y:{...ax,reverse:true,min:1,title:{display:true,text:'순위',color:muted}}}}}))}}
+ if(tab===3){const C=[css('--s1'),css('--s2'),css('--s3')],ink2=css('--ink2'),muted=css('--muted'),line=css('--line'),line2=css('--line2'),surf=css('--surface');
+  const AGO=[...new Set(D.map(d=>d.ag))];
+  $('pick').innerHTML=[0,1,2].map(k=>`<div class="pk"><span class="sw" style="background:${C[k]}"></span>${img(ARL[String(sel[k]||'').toLowerCase()],(sel[k]||'')+' 로고','alg')}<select data-k="${k}" aria-label="팀 ${k+1}">${AGO.map(a=>`<optgroup label="${esc(a)}">${D.filter(d=>d.ag===a).map(d=>`<option ${d.n===sel[k]?'selected':''}>${esc(d.n)}</option>`).join('')}</optgroup>`).join('')}</select></div>`).join('');
+  const S=sel.map(T);
+  Chart.defaults.font.family=css('--font');Chart.defaults.font.size=13;Chart.defaults.color=ink2;
+  const ax={grid:{color:line},border:{color:line2},ticks:{color:muted}};
+  const tip={backgroundColor:css('--ink'),titleColor:surf,bodyColor:surf,padding:10,cornerRadius:6};
+  const o={plugins:{legend:{display:false},tooltip:tip},responsive:true,maintainAspectRatio:false,scales:{x:{...ax,grid:{display:false}},y:{...ax,beginAtZero:true}}};
+  const tipLab=(fmt)=>({id:'tl',afterDatasetsDraw(c){const{ctx}=c;ctx.save();ctx.font=`600 13px ${css('--font')}`;ctx.fillStyle=ink2;ctx.textAlign='center';
+   c.getDatasetMeta(0).data.forEach((b,i)=>{const v=c.data.datasets[0].data[i];if(v==null)return;ctx.textBaseline=v<0?'top':'bottom';ctx.fillText(fmt(v),b.x,v<0?b.y+6:b.y-6)});ctx.restore()}});
+  const bar={borderRadius:4,borderSkipped:'start',maxBarThickness:56};
+  ch.push(new Chart(c1,{type:'bar',data:{labels:sel.map(n=>T(n).sale==null?n+' (집계 전)':n),datasets:[{data:S.map(d=>d.sale),backgroundColor:C,...bar}]},options:{...o,layout:{padding:{top:22}}},plugins:[tipLab(v=>v+'만')]}));
+  ch.push(new Chart(c2,{type:'bar',data:{labels:sel,datasets:[{data:S.map(gr),backgroundColor:C,...bar}]},options:{...o,layout:{padding:{top:22,bottom:4}},scales:{x:{...ax,grid:{display:false}},y:{...ax,grid:{color:c=>c.tick.value===0?line2:line}}}},plugins:[tipLab(v=>(v>0?'+':'')+v+'%')]}));
+  ch.push(new Chart(c3,{type:'line',data:{labels:['1주','2주','3주','4주'],datasets:S.map((d,i)=>({label:d.n,data:d.rk,borderColor:C[i],backgroundColor:C[i],borderWidth:2,pointRadius:5,pointHoverRadius:7,pointBorderColor:surf,pointBorderWidth:2,tension:0}))},
+   options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:tip,legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8,padding:16,color:ink2}}},scales:{x:ax,y:{...ax,reverse:true,min:1,title:{display:true,text:'순위',color:muted}}}}}));
+  const hc=v=>v<=5?['var(--h1)','#fff']:v<=20?['var(--h2)','#fff']:['var(--h3)','var(--h3-ink)'];
+  $('heat').innerHTML='<table><thead><tr><th></th>'+CT.map(n=>`<th>${n}</th>`).join('')+'</tr></thead><tbody>'+S.map((d,i)=>`<tr><th><span class="sw3" style="background:${C[i]}"></span>${d.n}</th>`+d.c.map(v=>num(v)?`<td class="num" style="background:${hc(v)[0]};color:${hc(v)[1]};font-weight:600" title="${d.n} · ${v}위">${v}</td>`:`<td class="e">${v?st(v):'<span class="none">—</span>'}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
+  const P=D.filter(d=>d.sale!=null),inS=d=>sel.indexOf(d.n);
+  // 축·기준선: 실제 데이터면 초동 최댓값에 맞추고, 기준선은 초동 중앙값 · 해외 2개국
+  const NC=D===D_DEMO?6:3,YM=NC+.5,MY=D===D_DEMO?3:1.5,SS=P.map(d=>d.sale).sort((a,b)=>a-b),MX=D===D_DEMO?85:SS[Math.floor(SS.length/2)],XM=D===D_DEMO?170:Math.ceil(Math.max(...SS)*1.08/50)*50;
+  ch.push(new Chart(c4,{type:'bubble',data:{datasets:[{data:P.map(d=>({x:d.sale,y:ovN(d),r:rad(d)})),backgroundColor:P.map(d=>inS(d)>=0?C[inS(d)]:css('--other')),borderColor:surf,borderWidth:2,hoverBorderColor:surf}]},
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:{right:12,top:8}},plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:c=>{const d=P[c.dataIndex];return `${d.n} (${d.ag}): 초동 ${d.sale}만 · 해외 ${ovN(d)}개국 진입 · 누적 ${d.cum}만`}}}},
+   scales:{x:{...ax,title:{display:true,text:'국내 초동 (만 장)',color:muted},min:-XM*0.02,max:XM,afterBuildTicks:a=>{a.ticks=a.ticks.filter(t=>t.value>=0);if(!a.ticks.some(t=>t.value===0))a.ticks.unshift({value:0})},ticks:{color:muted}},y:{...ax,title:{display:true,text:'해외 차트 진입 나라 수 ('+NC+'개 중)',color:muted},min:-0.35,max:YM,ticks:{stepSize:1,color:muted,callback:v=>Number.isInteger(v)&&v>=0?v:''}}}},
+   plugins:[{id:'bg',beforeDatasetsDraw(c){const{ctx,scales:{x,y}}=c,mx=x.getPixelForValue(MX),my=y.getPixelForValue(MY);ctx.save();
+    ctx.fillStyle=css('--q1');ctx.fillRect(mx,y.top,x.right-mx,my-y.top);
+    [[mx,y.top,x.right,my,'국내·해외 모두 강함','right',0,css('--acc-ink')],[x.left,y.top,mx,my,'해외 반응형','left',0,muted],
+     [mx,my,x.right,y.bottom,'국내 팬덤형','right',1,muted],[x.left,my,mx,y.bottom,'성장 필요','left',1,muted]]
+    .forEach(([x1,y1,x2,y2,t,al,b,col])=>{ctx.fillStyle=col;ctx.font=`600 14px ${css('--font')}`;ctx.textAlign=al;ctx.fillText(t,al==='right'?x2-10:x1+10,b?y2-10:y1+22)});
+    ctx.strokeStyle=line2;ctx.lineWidth=1;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(mx,y.top);ctx.lineTo(mx,y.bottom);ctx.moveTo(x.left,my);ctx.lineTo(x.right,my);ctx.stroke();ctx.restore()}},
+    // 이름은 고른 팀 + 초동 상위 5팀만, 겹치면 생략 (나머지는 툴팁)
+    {id:'lb',afterDatasetsDraw(c){const{ctx,scales:{x,y}}=c;ctx.save();const top=new Set([...P].sort((a,b)=>b.sale-a.sale).slice(0,5).map(d=>d.n));
+     const L=P.filter(d=>inS(d)>=0||top.has(d.n)).sort((a,b)=>(inS(b)>=0)-(inS(a)>=0)||b.sale-a.sale),boxes=[];
+     L.forEach(d=>{const on=inS(d)>=0;ctx.font=`${on?600:400} 12px ${css('--font')}`;const px=x.getPixelForValue(d.sale),py=y.getPixelForValue(ovN(d)),w=ctx.measureText(d.n).width;
+      const cand=[[px+rad(d)+4,py+4,'left'],[px-rad(d)-4-w,py+4,'left'],[px-w/2,py-rad(d)-6,'left'],[px-w/2,py+rad(d)+14,'left']];
+      const hit=b=>boxes.some(o=>b[0]<o[0]+o[2]&&b[0]+b[2]>o[0]&&b[1]<o[1]+o[3]&&b[1]+b[3]>o[1]);
+      const pick=cand.map(([lx,ly])=>[lx,ly-11,w,14]).find(b=>!hit(b)&&b[0]>=x.left&&b[0]+b[2]<=x.right&&b[1]>=y.top&&b[1]+b[3]<=y.bottom);
+      if(!pick&&!on)return;const b=pick||[px+rad(d)+4,py-7,w,14];boxes.push(b);ctx.fillStyle=on?css('--ink'):ink2;ctx.textAlign='left';ctx.fillText(d.n,b[0],b[1]+11)});ctx.restore()}}]}))}
+}
+document.addEventListener('change',e=>{const t=e.target;if(t.matches('#pick select')){sel[+t.dataset.k]=t.value;draw()}else if(t.id==='agCb'){cbAg=t.value;draw()}});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-sub],[data-i],[data-ag],[data-n],[data-grp]');if(!t)return;
+ if(t.dataset.sub){agSub=t.dataset.sub}
+ else if(t.dataset.grp){grp=t.dataset.grp}
+ else if(t.dataset.i){tab=+t.dataset.i}
+ else if(t.dataset.ag){ag.value=t.dataset.ag;agSub='all';tab=2}
+ else if(t.dataset.n){const n=t.dataset.n;if(sel.includes(n)){if(sel.length>1)sel=sel.filter(x=>x!==n)}else{if(sel.length>=3)sel.shift();sel.push(n)}}
+ draw()});
+$('toCmp').onclick=()=>{sel=D.filter(d=>d.cb==='now').slice(0,3).map(d=>d.n);tab=3;draw()};
+ag.onchange=()=>{agSub='all';draw()};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+(()=>{const w=$('wave');if(!w)return;let h='';for(let i=0;i<90;i++){const v=4+Math.round(Math.abs(Math.sin(i*1.3)*Math.cos(i*.37))*16);h+=`<i class="${i<30?'on':''}" style="height:${v}px"></i>`}w.innerHTML=h})();
+(()=>{const w=$('week');const W=(typeof WEEKS!=='undefined'&&WEEKS.length)?WEEKS:[{id:'2026-11-07',label:'2026-11-07 주'}];
+ const cur=new URLSearchParams(location.search).get('week')||W[0].id;W.forEach(x=>w.add(new Option(x.label,x.id)));w.value=cur;
+ w.onchange=()=>{const u=new URL(location.href);u.searchParams.set('week',w.value);location.href=u}})();
+draw();
+</script></body></html>

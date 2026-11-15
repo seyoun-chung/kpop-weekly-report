@@ -1,5 +1,5 @@
 // 자동 생성: python scripts/build_dashboard_data.py (직접 고치지 말 것)
-// 주차 2026-11-08 · 생성 2026-11-14 04:41
+// 주차 2026-11-08 · 생성 2026-11-15 22:44
 const CH_REAL=[
  {
   "t": "한터 주간 앨범",
@@ -8,7 +8,7 @@ const CH_REAL=[
   "wk": "11/2~11/8",
   "wkFull": "2026.11.02 ~ 2026.11.08",
   "u": "https://www.hanteochart.com/ko/charts/album/weekly",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "투어스",
@@ -139,7 +139,7 @@ const CH_REAL=[
   "wk": "11/1~11/7",
   "wkFull": "2026.11.01~2026.11.07 (2026년 45주차)",
   "u": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "TWS (투어스)",
@@ -270,7 +270,7 @@ const CH_REAL=[
   "wk": "11/2~11/8",
   "wkFull": "2026.11.02 ~ 2026.11.08",
   "u": "https://www.melon.com/chart/week/index.htm?classCd=GN0000&moved=Y&startDay=20261102&endDay=20261108",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "A2O, A2O LITE",
@@ -401,7 +401,7 @@ const CH_REAL=[
   "wk": "11/14 차트",
   "wkFull": "Week of 2026-11-14",
   "u": "https://www.billboard.com/charts/billboard-200/2026-11-14/",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "Olivia Rodrigo",
@@ -532,7 +532,7 @@ const CH_REAL=[
   "wk": "11/14 차트",
   "wkFull": "Week of 2026-11-14",
   "u": "https://www.billboard.com/charts/hot-100/2026-11-14/",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "Ella Langley",
@@ -663,7 +663,7 @@ const CH_REAL=[
   "wk": "11/2~11/8",
   "wkFull": "2026年11月02日～2026年11月08日 (URL 2026-11-16)",
   "u": "https://www.oricon.co.jp/rank/ja/w/2026-11-16/",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "BE:FIRST",
@@ -925,7 +925,7 @@ const CH_REAL=[
   "wk": "11/6~11/12",
   "wkFull": "2026-11-06~2026-11-12",
   "u": "https://charts.spotify.com/charts/view/regional-global-weekly/2026-11-12",
-  "checked": "2026-11-14",
+  "checked": "2026-11-15",
   "l": [
    {
     "n": "KAROL G, Judeline, rusowsky",
@@ -1321,6 +1321,7 @@ const D_REAL=[
   "lb": "빅히트",
   "al": "ARIRANG",
   "rel": "2026-03-20",
+  "kind": "",
   "sale": 416.9,
   "prev": 275.2,
   "pal": "Proof",
@@ -1387,6 +1388,7 @@ const D_REAL=[
   "lb": "플레디스",
   "al": "HAPPY BURSTDAY",
   "rel": "2025-05-26",
+  "kind": "",
   "sale": 252.1,
   "prev": 316.1,
   "pal": "SPILL THE FEELS",
@@ -1453,6 +1455,7 @@ const D_REAL=[
   "lb": "빅히트",
   "al": "7TH YEAR: 가시덤불에 잠시 바람이 멈췄을 때",
   "rel": "2026-04-13",
+  "kind": "",
   "sale": 180.7,
   "prev": 176.1,
   "pal": "별의 장: TOGETHER",
@@ -1519,6 +1522,7 @@ const D_REAL=[
   "lb": "빌리프랩",
   "al": "THE SIN : BLISS",
   "rel": "2026-08-21",
+  "kind": "",
   "sale": 209.9,
   "prev": 207.5,
   "pal": "THE SIN : VANISH",
@@ -1585,6 +1589,7 @@ const D_REAL=[
   "lb": "쏘스뮤직",
   "al": "PUREFLOW pt.1",
   "rel": "2026-05-22",
+  "kind": "",
   "sale": 55.9,
   "prev": 63.6,
   "pal": "HOT",
@@ -1651,6 +1656,7 @@ const D_REAL=[
   "lb": "빌리프랩",
   "al": "BREAK EVEN",
   "rel": "2026-10-26",
+  "kind": "",
   "sale": 44.4,
   "prev": 41.2,
   "pal": "MAMIHLAPINATAPAI",
@@ -1717,6 +1723,7 @@ const D_REAL=[
   "lb": "KOZ",
   "al": "HOME",
   "rel": "2026-06-08",
+  "kind": "",
   "sale": 108.6,
   "prev": 104.2,
   "pal": "The Action",
@@ -1770,7 +1777,7 @@ const D_REAL=[
    {
     "rule": "팬덤>대중성",
     "p": 5,
-    "obs": "초동 108.6만(초동 집계 48팀 중 13위)이지만 Hot 100·Global 200 미진입",
+    "obs": "초동 108.6만(초동 집계 48팀 중 12위)이지만 Hot 100·Global 200 미진입",
     "sug": "초동 108.6만 팬덤에 비해 음원 대중성 약함 → 예능·숏폼·OST로 대중 노출 확대",
     "txt": "초동 108.6만·곡 차트 미진입 → 예능·숏폼 노출"
    }
@@ -1783,6 +1790,7 @@ const D_REAL=[
   "lb": "빅히트",
   "al": "GREENGREEN",
   "rel": "2026-05-04",
+  "kind": "",
   "sale": 231.3,
   "prev": 43.6,
   "pal": "COLOR OUTSIDE THE LINES",
@@ -1849,6 +1857,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "THIS & THAT",
   "rel": "2026-08-07",
+  "kind": "",
   "sale": 328.9,
   "prev": 220.8,
   "pal": "SKZ IT TAPE ‘DO IT’",
@@ -1915,6 +1924,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "TEN: The Story Goes On",
   "rel": "2025-10-10",
+  "kind": "",
   "sale": 25.2,
   "prev": 60.9,
   "pal": "THIS IS FOR",
@@ -1981,6 +1991,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "Motto",
   "rel": "2026-05-18",
+  "kind": "",
   "sale": 30.1,
   "prev": 38.7,
   "pal": "TUNNEL VISION",
@@ -2047,6 +2058,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "Strange Muse",
   "rel": "2026-10-19",
+  "kind": "",
   "sale": 35.0,
   "prev": 34.6,
   "pal": "Heavy Serenade",
@@ -2113,6 +2125,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "Looks Can Kill",
   "rel": "2026-10-26",
+  "kind": "",
   "sale": 71.5,
   "prev": 66.7,
   "pal": "REVIVE+",
@@ -2179,6 +2192,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "sonorous",
   "rel": "2026-09-30",
+  "kind": "",
   "sale": 17.8,
   "prev": 26.1,
   "pal": "ReDeFINE",
@@ -2245,6 +2259,7 @@ const D_REAL=[
   "lb": "YH",
   "al": "Sequence 02: Attraction",
   "rel": "2026-10-27",
+  "kind": "",
   "sale": 80.3,
   "prev": 73.2,
   "pal": "Sequence 01: Curiosity",
@@ -2311,6 +2326,7 @@ const D_REAL=[
   "lb": "KQ",
   "al": "GOLDEN HOUR : Part.5",
   "rel": "2026-06-26",
+  "kind": "",
   "sale": 188.6,
   "prev": 154.4,
   "pal": "GOLDEN HOUR : Part.4",
@@ -2377,6 +2393,7 @@ const D_REAL=[
   "lb": "KQ",
   "al": "ROUTE ZERO : The CALLING",
   "rel": "2026-11-02",
+  "kind": "",
   "sale": 37.1,
   "prev": 36.4,
   "pal": "ROUTE ZERO : The ORA",
@@ -2425,7 +2442,7 @@ const D_REAL=[
     "p": 5,
     "obs": "한터 Top 10(11/2~11/8)·써클 Top 10(11/1~11/7) 진입, 멜론 Top 10(11/2~11/8) 밖",
     "sug": "「ROUTE ZERO : The CALLING」 앨범 판매 대비 국내 음원 반응 약함 → 음악방송 외 예능·숏폼으로 타이틀곡 노출",
-    "txt": "한터 Top 10·멜론 Top 10 밖 → 예능·숏폼 노출"
+    "txt": "앨범 한터 Top 10, 음원 멜론 밖 → 예능·숏폼 노출"
    },
    {
     "rule": "규모 위치",
@@ -2443,6 +2460,7 @@ const D_REAL=[
   "lb": "더뮤즈",
   "al": "PULSE",
   "rel": "2026-11-03",
+  "kind": "",
   "sale": 60.3,
   "prev": 10.4,
   "pal": "lip bomb",
@@ -2509,6 +2527,7 @@ const D_REAL=[
   "lb": "더블랙레이블",
   "al": "GO HARD",
   "rel": "2026-10-12",
+  "kind": "",
   "sale": 10.7,
   "prev": 30.2,
   "pal": "BITE NOW",
@@ -2575,6 +2594,7 @@ const D_REAL=[
   "lb": "더블랙레이블",
   "al": "CRASH",
   "rel": "2026-09-28",
+  "kind": "",
   "sale": 6.1,
   "prev": 25.0,
   "pal": "ALLDAY PROJECT",
@@ -2641,6 +2661,7 @@ const D_REAL=[
   "lb": "더블랙레이블",
   "al": "rosie",
   "rel": "2024-12-06",
+  "kind": "",
   "sale": 44.5,
   "prev": null,
   "pal": "",
@@ -2707,6 +2728,7 @@ const D_REAL=[
   "lb": "A2O",
   "al": "NEON",
   "rel": "2026-10-13",
+  "kind": "",
   "sale": null,
   "prev": null,
   "pal": "",
@@ -2773,6 +2795,7 @@ const D_REAL=[
   "lb": "스트레인지랩",
   "al": "i=!",
   "rel": "2026-10-28",
+  "kind": "",
   "sale": 11.1,
   "prev": 22.4,
   "pal": "I,God",
@@ -2828,7 +2851,7 @@ const D_REAL=[
     "p": 5,
     "obs": "한터 Top 10(11/2~11/8) 진입, 멜론 Top 10(11/2~11/8) 밖",
     "sug": "「i=!」 앨범 판매 대비 국내 음원 반응 약함 → 음악방송 외 예능·숏폼으로 타이틀곡 노출",
-    "txt": "한터 Top 10·멜론 Top 10 밖 → 예능·숏폼 노출"
+    "txt": "앨범 한터 Top 10, 음원 멜론 밖 → 예능·숏폼 노출"
    }
   ]
  },
@@ -2839,6 +2862,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "LEMONADE - The 2nd Album",
   "rel": "2026-05-29",
+  "kind": "",
   "sale": 90.9,
   "prev": 108.8,
   "pal": "Rich Man - The 6th Mini Album",
@@ -2905,6 +2929,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "BLINGY - The 7th Album",
   "rel": "2026-08-24",
+  "kind": "",
   "sale": 94.0,
   "prev": 109.5,
   "pal": "WALK - The 6th Album",
@@ -2971,6 +2996,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Beat It Up (미니 6집)",
   "rel": "2025-11-17",
+  "kind": "",
   "sale": 100.7,
   "prev": 101.8,
   "pal": "Go Back To The Future (정규 5집)",
@@ -3017,14 +3043,14 @@ const D_REAL=[
    {
     "rule": "팬덤>대중성",
     "p": 5,
-    "obs": "초동 100.7만(초동 집계 48팀 중 15위)이지만 Hot 100·Global 200 미진입",
+    "obs": "초동 100.7만(초동 집계 48팀 중 14위)이지만 Hot 100·Global 200 미진입",
     "sug": "초동 100.7만 팬덤에 비해 음원 대중성 약함 → 예능·숏폼·OST로 대중 노출 확대",
     "txt": "초동 100.7만·곡 차트 미진입 → 예능·숏폼 노출"
    },
    {
     "rule": "초동 쏠림",
     "p": 7,
-    "obs": "써클 누적 102.3만 = 한터 초동의 1.02배 (발매 362일)",
+    "obs": "써클 누적 102.3만 = 한터 초동의 1.02배 (발매 363일)",
     "sug": "「Beat It Up (미니 6집)」 판매가 초동에 몰림 → 발매 2~4주 차 콘텐츠·이벤트로 지속력 보강",
     "txt": "누적이 초동의 1.02배 → 발매 2~4주 차 콘텐츠"
    }
@@ -3037,6 +3063,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "II - The 2nd Mini Album",
   "rel": "2026-06-15",
+  "kind": "",
   "sale": 128.9,
   "prev": 179.7,
   "pal": "ODYSSEY (정규 1집)",
@@ -3103,6 +3130,7 @@ const D_REAL=[
   "lb": "YG",
   "al": "DEADLINE (미니 3집)",
   "rel": "2026-02-27",
+  "kind": "",
   "sale": 177.5,
   "prev": 154.3,
   "pal": "BORN PINK (정규 2집)",
@@ -3169,6 +3197,7 @@ const D_REAL=[
   "lb": "YG",
   "al": "춤 (CHOOM) (미니 3집)",
   "rel": "2026-05-04",
+  "kind": "",
   "sale": 60.1,
   "prev": 55.3,
   "pal": "WE GO UP (미니 2집)",
@@ -3235,6 +3264,7 @@ const D_REAL=[
   "lb": "큐브",
   "al": "We made (미니 9집)",
   "rel": "2026-07-06",
+  "kind": "",
   "sale": 62.0,
   "prev": 106.4,
   "pal": "We are (미니 8집)",
@@ -3299,64 +3329,65 @@ const D_REAL=[
   "ko": "투어스",
   "ag": "하이브",
   "lb": "플레디스",
-  "al": "NO TRAGEDY",
-  "rel": "2026-04-27",
-  "sale": 111.3,
-  "prev": 64.0,
-  "pal": "play hard",
-  "sr": 1112770,
-  "pr": 639787,
+  "al": "TO US",
+  "rel": "2026-11-02",
+  "kind": "single",
+  "sale": 82.5,
+  "prev": null,
+  "pal": "",
+  "sr": 825360,
+  "pr": null,
   "sst": null,
-  "cum": 135.3,
+  "cum": 84.1,
   "rk": [
    1,
-   13,
-   2,
-   9
+   null,
+   null,
+   null
   ],
   "c": [
    null,
-   1,
+   "50위 밖",
    null,
    null,
    null,
-   17
+   "저장본 없음"
   ],
-  "cb": "",
+  "cb": "now",
   "hot": null,
   "hotSong": "",
   "g200": null,
   "g200Song": "",
-  "latamBy": "멕시코 확인한 저장본에 없음 · 브라질 확인한 저장본에 없음 · 칠레 확인한 저장본에 없음 · 아르헨티나 확인한 저장본에 없음 · 페루 저장본 없음 · 콜롬비아 17위",
-  "latamTxt": "콜롬비아 17위",
+  "latamBy": "멕시코 저장본 없음 · 브라질 저장본 없음 · 칠레 저장본 없음 · 아르헨티나 저장본 없음 · 페루 저장본 없음 · 콜롬비아 저장본 없음",
+  "latamTxt": "저장본 없음",
   "src": {
-   "초동": "https://www.hanteochart.com/ko/albums/900558280",
-   "전작": "https://www.hanteochart.com/ko/albums/900550075",
-   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=37&yearTime=3",
-   "써클 식": "5th Mini Album `NO TRAGEDY` 2026년 1,278,436 + 5th Mini Album `NO TRAGEDY` (Weverse) 2026년 54,952 + 5th Mini Album `NO TRAGEDY` (KiT) 2026년 19,131 = 1,352,519 (써클 주간 Total_CNT 버전별·연도별 마지막 Top100 진입 주 기준, 2026-11-01~2026-11-07주까지; Top100 밖 주 판매분 미포함)",
-   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=18&yearTime=3 ; https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=19&yearTime=3 ; https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=20&yearTime=3 ; https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=21&yearTime=3",
+   "초동": "https://www.hanteochart.com/ko/albums/900565493",
+   "전작": "",
+   "써클 누적": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3",
+   "써클 식": "TO US 2026년 768,577 + TO US (Weverse) 2026년 72,717 = 841,294 (써클 주간 Total_CNT 버전별·연도별 마지막 Top100 진입 주 기준, 2026-11-01~2026-11-07주까지; Top100 밖 주 판매분 미포함)",
+   "주간 순위": "https://circlechart.kr/page_chart/album.circle?nationGbn=T&termGbn=week&hitYear=2026&targetTime=45&yearTime=3",
    "빌보드 200": "https://www.billboard.com/charts/billboard-200/2026-11-14/",
-   "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-05-18/",
-   "UK": "https://www.officialcharts.com/charts/albums-chart/20260501/7502/ ; https://www.officialcharts.com/charts/albums-chart/20260508/7502/ ; https://www.officialcharts.com/charts/albums-chart/20260515/7502/",
+   "오리콘": "https://www.oricon.co.jp/rank/ja/w/2026-11-16/",
+   "UK": "https://www.officialcharts.com/charts/albums-chart/20261106/7502/ ; https://www.officialcharts.com/charts/albums-chart/20261113/7502/",
    "Hot 100": "https://www.billboard.com/charts/hot-100/2026-11-14/",
-   "남미 iTunes": "https://web.archive.org/web/20260427215405/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260428093324/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260430211926/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260505225740/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260427215935/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20260428093026/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20260504184232/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20260427215331/https://kworb.net/charts/aitunes/cl.html ; https://web.archive.org/web/20260428093035/https://kworb.net/charts/aitunes/cl.html ; https://web.archive.org/web/20260430003833/https://kworb.net/charts/aitunes/ar.html ; https://web.archive.org/web/20260427220822/https://kworb.net/charts/aitunes/co.html"
+   "남미 iTunes": ""
   },
-  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv manual 2026-11-05). 감지: 한터 NO TRAGEDY: 미니앨범 5집(규칙 B: TO US는 싱글앨범이라 최신에서 제외); 소속 확인: https://www.hanteochart.com/ko/artists/70012. /artist/tws/ 페이지에 차트 이력 블록 없음 -> 빌보드200 차트 페이지 2026-05-09~2026-11-14자 28주 확인, 앨범 없음(규칙 C); 오리콘 2026-05-18자 1위(NO TRAGEDY); UK Top100 확인: 2026-05-01, 2026-05-08, 2026-05-15자",
+  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.hanteochart.com/ko/artists/70012; TO US 11-02 발매 → 한터 초동 집계 전(11-08 완료). 소속=한터 주간차트 기획사 표기 플레디스; (옛 규칙 B: 싱글앨범(멜론 [싱글] 3곡 albumId=15054654, 한터 미니/정규 표기 없음) → 최신/전작 비교에서 제외(2026-11-05 manual). 한터 초동 691,479는 참고 → 집계 규칙 ② 변경(2026-11-15, 세연 님): 싱글 앨범(실물)도 최신 앨범·이번 주 컴백으로 셈, 전작은 같은 종류끼리(같은 종류 전작 없음 → 비교 비움). 싱글 앨범(전작은 같은 종류끼리). 전작 미등록. 미진입(첫 집계 2026-11-14자), 2026-11-21자 미공개; /artist/tws/ 페이지에 차트 이력 블록 없음 -> 빌보드200 차트 페이지 2026-11-14~2026-11-14자 1주 확인, 앨범 없음(규칙 C); 오리콘 무료 공개 Top50 확인: 2026-11-16자; 미발표 2026-11-23, 2026-11-30자; UK Top100 확인: 2026-11-06, 2026-11-13자",
   "live": null,
   "ins": [
    {
-    "rule": "일본 강세",
-    "p": 4,
-    "obs": "오리콘 1위, 빌보드 200·UK 미진입",
-    "sug": "「NO TRAGEDY」 일본 반응(오리콘 1위) 중심 전략 유지(일본 싱글·투어), 미국은 디지털·숏폼으로 단계적 진입",
-    "txt": "오리콘 1위·미국 미진입 → 일본 중심, 미국은 숏폼"
+    "rule": "국내 팬덤>음원",
+    "p": 5,
+    "obs": "한터 Top 10(11/2~11/8)·써클 Top 10(11/1~11/7) 진입, 멜론 Top 10(11/2~11/8) 밖",
+    "sug": "「TO US」 앨범 판매 대비 국내 음원 반응 약함 → 음악방송 외 예능·숏폼으로 타이틀곡 노출",
+    "txt": "앨범 한터 Top 10, 음원 멜론 밖 → 예능·숏폼 노출"
    },
    {
-    "rule": "팬덤>대중성",
-    "p": 5,
-    "obs": "초동 111.3만(초동 집계 48팀 중 12위)이지만 Hot 100·Global 200 미진입",
-    "sug": "초동 111.3만 팬덤에 비해 음원 대중성 약함 → 예능·숏폼·OST로 대중 노출 확대",
-    "txt": "초동 111.3만·곡 차트 미진입 → 예능·숏폼 노출"
+    "rule": "규모 위치",
+    "p": 8,
+    "obs": "초동 82.5만, 초동 집계 48팀 중 17위(상위 35%) · 비슷한 규모: TREASURE, NCT DREAM",
+    "sug": "초동 82.5만(17위) 규모의 동급 팀(TREASURE, NCT DREAM)과 해외 성적을 비교해 강점 시장 선택",
+    "txt": "초동 17위/48팀 → 동급 TREASURE·NCT DREAM와 비교"
    }
   ]
  },
@@ -3367,6 +3398,7 @@ const D_REAL=[
   "lb": "YX LABELS",
   "al": "Mark on Me",
   "rel": "2026-09-08",
+  "kind": "",
   "sale": 135.7,
   "prev": 122.2,
   "pal": "Back to Life",
@@ -3433,6 +3465,7 @@ const D_REAL=[
   "lb": "HYBE UMG",
   "al": "WILD",
   "rel": "2026-08-14",
+  "kind": "",
   "sale": 7.8,
   "prev": 1.6,
   "pal": "BEAUTIFUL CHAOS",
@@ -3499,6 +3532,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "I SPY",
   "rel": "2026-10-12",
+  "kind": "",
   "sale": 155.9,
   "prev": 182.6,
   "pal": "Ode to Love",
@@ -3565,6 +3599,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Lemon Tang",
   "rel": "2026-06-22",
+  "kind": "",
   "sale": 59.2,
   "prev": 42.5,
   "pal": "FOCUS",
@@ -3631,6 +3666,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Vision Wings",
   "rel": "2026-08-10",
+  "kind": "",
   "sale": 24.6,
   "prev": 30.2,
   "pal": "BIG BANDS",
@@ -3671,7 +3707,7 @@ const D_REAL=[
    "Hot 100": "https://www.billboard.com/artist/wayv/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20260810230731/https://kworb.net/charts/aitunes/mx.html"
   },
-  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 유닛 WayV-KUN&XIAOJUN 등은 그룹으로 대표. 텐은 2026-04 SM 계약 종료(그룹 활동 유지). 빌보드200 Billboard 200 차트 이력 없음(확인 2026-11-14); 오리콘 2026-08-24자 48위(Vision Wings); UK Top100 확인: 2026-08-14, 2026-08-21, 2026-08-28자",
+  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 유닛 WayV-KUN&XIAOJUN 등은 그룹으로 대표. 텐은 2026-04 SM 계약 종료(그룹 활동 유지). 빌보드200 Billboard 200 차트 이력 없음(확인 2026-11-15); 오리콘 2026-08-24자 48위(Vision Wings); UK Top100 확인: 2026-08-14, 2026-08-21, 2026-08-28자",
   "live": null,
   "ins": [
    {
@@ -3684,7 +3720,7 @@ const D_REAL=[
    {
     "rule": "초동 쏠림",
     "p": 7,
-    "obs": "써클 누적 24.2만 = 한터 초동의 0.98배 (발매 96일)",
+    "obs": "써클 누적 24.2만 = 한터 초동의 0.98배 (발매 97일)",
     "sug": "「Vision Wings」 판매가 초동에 몰림 → 발매 2~4주 차 콘텐츠·이벤트로 지속력 보강",
     "txt": "누적이 초동의 0.98배 → 발매 2~4주 차 콘텐츠"
    }
@@ -3697,6 +3733,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Atmos",
   "rel": "2026-06-01",
+  "kind": "",
   "sale": 12.0,
   "prev": 21.7,
   "pal": "Poet | Artist",
@@ -3737,7 +3774,7 @@ const D_REAL=[
    "Hot 100": "https://www.billboard.com/artist/shinee/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20260605123140/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260605212337/https://kworb.net/charts/aitunes/br.html ; https://web.archive.org/web/20260603054548/https://kworb.net/charts/aitunes/pe.html"
   },
-  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 멤버 중 태민(빅플래닛메이드)·온유(GRIFFIN)는 타사 → 솔로 제외. 빌보드200 Billboard 200 차트 이력 없음(확인 2026-11-14); 오리콘 2026-06-22자 28위(Atmos); UK Top100 확인: 2026-06-05, 2026-06-12, 2026-06-19자",
+  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 멤버 중 태민(빅플래닛메이드)·온유(GRIFFIN)는 타사 → 솔로 제외. 빌보드200 Billboard 200 차트 이력 없음(확인 2026-11-15); 오리콘 2026-06-22자 28위(Atmos); UK Top100 확인: 2026-06-05, 2026-06-12, 2026-06-19자",
   "live": null,
   "ins": [
    {
@@ -3763,6 +3800,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Velvet Summer",
   "rel": "2026-08-03",
+  "kind": "",
   "sale": 10.6,
   "prev": 27.0,
   "pal": "Cosmic",
@@ -3803,7 +3841,7 @@ const D_REAL=[
    "Hot 100": "https://www.billboard.com/artist/red-velvet/chart-history/hsi/",
    "남미 iTunes": "https://web.archive.org/web/20260810230731/https://kworb.net/charts/aitunes/mx.html ; https://web.archive.org/web/20260808193835/https://kworb.net/charts/aitunes/br.html"
   },
-  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 유닛 Red Velvet - IRENE & SEULGI TILT(2025-05-26, 900543948)는 그룹으로 대표. 웬디·예리 SM 이탈. 빌보드200 차트 이력에 이 앨범 없음(확인 2026-11-14); 오리콘 2026-08-31자 27위(Velvet Summer); UK Top100 확인: 2026-08-07, 2026-08-14, 2026-08-21자",
+  "note": "자동 생성(auto_build.py, 레지스트리 data/teams/albums.csv roster 2026-11-05). 감지: 소속 확인: https://www.smentertainment.com/artist/; 유닛 Red Velvet - IRENE & SEULGI TILT(2025-05-26, 900543948)는 그룹으로 대표. 웬디·예리 SM 이탈. 빌보드200 차트 이력에 이 앨범 없음(확인 2026-11-15); 오리콘 2026-08-31자 27위(Velvet Summer); UK Top100 확인: 2026-08-07, 2026-08-14, 2026-08-21자",
   "live": null,
   "ins": [
    {
@@ -3829,6 +3867,7 @@ const D_REAL=[
   "lb": "SM",
   "al": "Hey, Somebody",
   "rel": "2026-10-26",
+  "kind": "",
   "sale": 8.0,
   "prev": null,
   "pal": "",
@@ -3895,6 +3934,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "SAUCIN’",
   "rel": "2026-08-24",
+  "kind": "",
   "sale": 43.3,
   "prev": 44.5,
   "pal": "Mmchk",
@@ -3961,6 +4001,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "Sour Grapes",
   "rel": "2026-09-28",
+  "kind": "",
   "sale": 22.7,
   "prev": null,
   "pal": "",
@@ -4020,6 +4061,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "IMPULSE",
   "rel": "2026-10-12",
+  "kind": "",
   "sale": 11.1,
   "prev": 15.1,
   "pal": "DEAD AND",
@@ -4086,6 +4128,7 @@ const D_REAL=[
   "lb": "JYP",
   "al": "KICK OFF THE WALL Pt.1",
   "rel": "2026-10-06",
+  "kind": "",
   "sale": 53.2,
   "prev": 45.6,
   "pal": "My First Kick",
@@ -4152,6 +4195,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "WhyKiiiKiii",
   "rel": "2026-08-10",
+  "kind": "",
   "sale": 8.2,
   "prev": 4.1,
   "pal": "Delulu Pack",
@@ -4218,6 +4262,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "The Phase",
   "rel": "2026-09-04",
+  "kind": "",
   "sale": 17.7,
   "prev": 42.7,
   "pal": "THE X",
@@ -4284,6 +4329,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "I did it.",
   "rel": "2025-09-15",
+  "kind": "",
   "sale": 39.5,
   "prev": null,
   "pal": "",
@@ -4343,6 +4389,7 @@ const D_REAL=[
   "lb": "스타쉽",
   "al": "A NEW ERA OF NOW",
   "rel": "2026-08-05",
+  "kind": "",
   "sale": 1.1,
   "prev": null,
   "pal": "",
@@ -4402,6 +4449,7 @@ const D_REAL=[
   "lb": "YG",
   "al": "NEW WAV",
   "rel": "2026-06-01",
+  "kind": "",
   "sale": 102.6,
   "prev": 113.1,
   "pal": "LOVE PULSE",
@@ -4468,6 +4516,7 @@ const D_REAL=[
   "lb": "큐브",
   "al": "끝내주는 인생 (What a Wonderful Life)",
   "rel": "2026-09-07",
+  "kind": "",
   "sale": 7.5,
   "prev": 3.6,
   "pal": "WINDY",
@@ -4534,6 +4583,7 @@ const D_REAL=[
   "lb": "LLOUD",
   "al": "Press Play",
   "rel": "2026-10-23",
+  "kind": "",
   "sale": null,
   "prev": 16.8,
   "pal": "Alter Ego",

@@ -447,7 +447,7 @@ const CH_REAL=[
     "a": "FNC",
     "g": "FNC",
     "src": "한터·써클 차트 소속사 표기",
-    "k": false,
+    "k": true,
     "p": "NEW",
     "v": ""
    },
@@ -721,7 +721,7 @@ const CH_REAL=[
     "a": "",
     "g": "",
     "src": "",
-    "k": false,
+    "k": true,
     "p": "47",
     "v": "13,137장(추정)"
    },
@@ -733,7 +733,7 @@ const CH_REAL=[
     "a": "KOZ",
     "g": "하이브",
     "src": "data/아티스트_출처확인.md",
-    "k": false,
+    "k": true,
     "p": "19",
     "v": "11,201장(추정)"
    },
